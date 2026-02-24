@@ -1,0 +1,121 @@
+
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Example</title>
+<style>
+
+.device { /* device specifications from professor golub */
+  margin:auto; 
+  max-width: 640px;
+  max-height: 960px;
+  width: 640px;
+  height: 960px;
+  overflow: hidden;
+  background-color: #555;
+  position: relative;
+}
+
+h1 {
+  font-size: 28pt;
+}
+
+/* Style the tab buttons */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: calc(100% / 6); /* kind of old solution for even split between 6 div*/
+  height: 10%;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+/* Change background color of buttons on hover */
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Set default styles for tab content */
+.tabcontent {
+  color: white;
+  height: 80%;
+  display: none;
+  padding: 50px;
+  text-align: center;
+}
+
+/* Style each tab content individually */
+#tab1 {background-color:red;}
+#tab2 {background-color:green;}
+#tab3 {background-color:blue;}
+#tab4 {background-color:orange;}
+#tab5 {background-color:purple;}
+#tab6 {background-color:teal;}
+
+</style>
+
+
+</head>
+
+<body>
+<div class="device">
+
+    <div id="tab1" class="tabcontent">
+        <h1>tab1</h1>
+        <p>tab1 is the capital city of England.</p>
+    </div>
+
+    <div id="tab2" class="tabcontent">
+        <h1>tab2</h1>
+        <p>tab2 is the capital of France.</p>
+    </div>
+
+    <div id="tab3" class="tabcontent">
+        <h1>tab3</h1>
+        <p>tab3 is the capital of Japan.</p>
+    </div>
+
+    <div id="tab4" class="tabcontent">
+        <h1>tab4</h1>
+        <p>tab4 is the capital of Norway.</p>
+    </div>
+
+    <div id="tab5" class="tabcontent">
+    </div>
+
+    <div id="tab6" class="tabcontent">
+    </div>
+
+    <button class="tablink" onclick="openCity('tab1', this, 'red')" id="defaultOpen">tab1</button>
+    <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
+    <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
+    <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
+    <button class="tablink" onclick="openCity('tab5', this, 'purple')">tab5</button>
+    <button class="tablink" onclick="openCity('tab6', this, 'teal')">tab6</button>
+
+</div>
+
+<script>
+function openCity(cityName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(cityName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+</body></html>
