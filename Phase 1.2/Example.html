@@ -46,10 +46,11 @@ h1 {
   display: none;
   padding: 50px;
   text-align: center;
+  overflow-y: auto;
 }
 
 /* Style each tab content individually */
-#tab1 {background-color:red;}
+#tab1 {background-color:red; text-align:left; }
 #tab2 {background-color:green;}
 #tab3 {background-color:blue;}
 #tab4 {background-color:orange;}
@@ -65,10 +66,10 @@ h1 {
 <div class="device">
 
     <div id="tab1" class="tabcontent">
-        <h1>tab1</h1>
-        <p>tab1 is the capital city of England.</p>
+        <h1> -Text Screen- </h1>
+        <p id="tab1content"></p>
     </div>
-
+        
     <div id="tab2" class="tabcontent">
         <h1>tab2</h1>
         <p>tab2 is the capital of France.</p>
@@ -116,6 +117,9 @@ function openCity(cityName,elmnt,color) {
 }
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
+
+// get the text from the other file cause having it here is annoying
+fetch("lorem.txt").then(response => response.text()).then(text => document.getElementById("tab1content").textContent = text);
 </script>
 
 </body></html>
