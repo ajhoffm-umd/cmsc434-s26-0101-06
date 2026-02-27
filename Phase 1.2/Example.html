@@ -57,6 +57,17 @@ h1 {
 #tab5 {background-color:purple;}
 #tab6 {background-color:teal;}
 
+#tab5 {
+  text-align: left;
+}
+
+#output{
+  padding: 20px;
+  border: 2px solid black;
+  background-color: rgb(106, 106, 106);
+  min-height: 30px;
+  width: 50%;
+}
 </style>
 
 
@@ -86,7 +97,28 @@ h1 {
     </div>
 
     <div id="tab5" class="tabcontent">
+      <h1>-Choices Screen-</h1>
+      <h2>Camera Type #1</h2>
+      <input type="radio" id= "dSLR" name="cam_types" value="dSLR">
+      <label for="dSLR">dSLR</label><br>
+
+      <input type="radio" id= "mirrorLess" name="cam_types" value="mirrorLess">
+      <label for="mirrorLess">mirrorLess</label><br>
+
+      <br>
+      <h2>Camera Type #2</h2>
+      <select id="dropdown2">
+          <option value="dSLR">dSLR</option>
+          <option value="mirrorLess">mirrorLess</option>
+      </select>
+      <br>
+
+      <button onclick="camChoices()">Submit</button>
+
+      <p id="output"></p>
+
     </div>
+
 
     <div id="tab6" class="tabcontent">
     </div>
@@ -95,7 +127,7 @@ h1 {
     <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
     <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
-    <button class="tablink" onclick="openCity('tab5', this, 'purple')">tab5</button>
+    <button class="tablink" onclick="openCity('tab5', this, 'purple')">Choices</button>
     <button class="tablink" onclick="openCity('tab6', this, 'teal')">tab6</button>
 
 </div>
@@ -118,8 +150,17 @@ function openCity(cityName,elmnt,color) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
-// get the text from the other file cause having it here is annoying
-fetch("lorem.txt").then(response => response.text()).then(text => document.getElementById("tab1content").textContent = text);
+function camChoices(){
+  const selected = document.querySelector('input[name="cam_types"]:checked')
+
+  if (!selected) {
+    document.getElementById("output").textContent = "Please select a camera option.";
+    return;
+  }
+  const dropdown = document.getElementById("dropdown2").value;
+
+  document.getElementById("output").textContent ="You selected " + selected.value +" and " + dropdown;
+}
 </script>
 
 </body></html>
