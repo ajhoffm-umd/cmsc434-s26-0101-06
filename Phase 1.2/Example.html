@@ -1,7 +1,10 @@
 
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<html lang="en"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Example</title>
 <link rel="icon" href="choices.png">
+<script src="chart.js"></script>
+<script src="chartjs-plugin-datalabels.js"></script>
 <style>
 
 .device { /* device specifications from professor golub */
@@ -50,6 +53,20 @@ h1 {
   overflow-y: auto;
 }
 
+.tab3yellow {
+  background-color: black;
+  color: yellow; 
+  padding: 0;
+  margin: 0;
+}
+
+.tab3black {
+  background-color: yellow;
+  color: black; 
+  padding: 0;
+  margin: 0;
+}
+
 /* Style each tab content individually */
 #tab1 {background-color:red; text-align:left; }
 #tab2 {background-color:green;}
@@ -93,8 +110,12 @@ h1 {
     </div>
 
     <div id="tab3" class="tabcontent">
-        <h1>tab3</h1>
-        <p>tab3 is the capital of Japan.</p>
+      <h1>Colors</h1>
+      <div>
+        <p class="tab3yellow">This is the first one</p>
+        <p class="tab3black">This is the second one</p>
+      </div>
+        <canvas id="myPieChart" width="1500" height="1500" style="display: block; box-sizing: border-box; height: 600px; width: 600px;"></canvas>
     </div>
 
     <div id="tab4" class="tabcontent">
@@ -129,9 +150,9 @@ h1 {
     <div id="tab6" class="tabcontent">
     </div>
 
-    <button class="tablink" onclick="openCity('tab1', this, 'red')" id="defaultOpen">tab1</button>
+    <button class="tablink" onclick="openCity('tab1', this, 'red')" >tab1</button>
     <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
-    <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
+    <button class="tablink" onclick="openCity('tab3', this, 'blue')" id="defaultOpen">tab3</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
     <button class="tablink" onclick="openCity('tab5', this, 'purple')">
       <img src="choices.png" alt="icon" class="tab-icon">Choices</button>
@@ -168,6 +189,64 @@ function camChoices(){
 
   document.getElementById("output").textContent ="You selected " + selected.value +" and " + dropdown;
 }
+// get the text from the other file cause having it here is annoying
+fetch("lorem.txt").then(response => response.text()).then(text => document.getElementById("tab1content").textContent = text);
+
+// tab 3 pie chart code
+
+
+     const myContext = document.getElementById('myPieChart').getContext('2d');
+   
+     const myData = {
+        labels: ['Vegetables  ', 'Protein  ', 'Carbohydrates  ', 'Fruits    '],
+        datasets: [{
+           label: 'Dinner',
+           data: [25, 50, 30, 15],
+           backgroundColor: ['#78bd5e', '#bd5e6e', '#bda45e', '#5ebdbd']
+        }]
+     };
+  
+     const chartConfig = {
+        type: 'pie',
+        data: myData,
+        plugins: [ChartDataLabels],
+        options: {
+           events: [],
+           layout: {
+              padding: {
+                 top: 30
+              }
+           },
+           plugins: { 
+              legend: { 
+                 labels: { 
+                    font: { family: 'Consolas', size: 20 },
+                    padding: 5
+                 },
+                 position: 'bottom', 
+                 align: 'start',
+              },
+ 
+              datalabels: {
+                 color: '#111111',
+                 anchor: 'end', 
+                 align: 'end', 
+                 offset: 5,   
+                 font: {
+                   weight: 'bold',
+                   size: 16
+                 },
+                 formatter: (value) => { return value; }
+              }
+           }
+        }
+     };
+
+     myChart = new Chart(myContext, chartConfig);
+   
+   
+
+
 </script>
 
 </body></html>
