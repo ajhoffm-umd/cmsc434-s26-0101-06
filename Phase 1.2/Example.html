@@ -1,6 +1,10 @@
 
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<html lang="en"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Example</title>
+<link rel="icon" href="choices.png">
+<script src="chart.js"></script>
+<script src="chartjs-plugin-datalabels.js"></script>
 <style>
 
 .device { /* device specifications from professor golub */
@@ -49,6 +53,20 @@ h1 {
   overflow-y: auto;
 }
 
+.tab3yellow {
+  background-color: black;
+  color: yellow; 
+  padding: 0;
+  margin: 0;
+}
+
+.tab3black {
+  background-color: yellow;
+  color: black; 
+  padding: 0;
+  margin: 0;
+}
+
 /* Style each tab content individually */
 #tab1 {background-color:red; text-align:left; }
 #tab2 { background-color:green; position: relative; }
@@ -66,6 +84,132 @@ h1 {
 #tab4 {background-color:orange;}
 #tab5 {background-color:purple;}
 #tab6 {background-color:teal;}
+
+/* for tab6 */
+.taskList {
+  margin: 15;
+  padding: 0;
+  list-style-type: none;
+}
+
+.taskList li {
+  margin-top: 6px;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  background: white;
+  font-size: 18px;
+  transition: 0.2s;
+  color: black;
+  border-radius: 15px;
+
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.taskList li:nth-child(odd) {
+  background: lightgrey
+}
+
+.taskList li:hover {
+  background: lightcyan;
+  box-shadow: 3px 4px #346354;
+}
+
+.taskList li.checked {
+  background: #888;
+  color: #fff;
+  text-decoration: line-through;
+}
+
+ul li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}
+
+.close {
+  position: absolute;
+  right: 2;
+  top: 2;
+  padding: 10px 16px 10px 16px;
+  border-radius: 15px;
+}
+
+.close:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+.tab6header {
+  background-color: darkslategrey;
+  padding: 30px 40px;
+  color: white;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.tab6header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+input {
+  margin-left: 0;
+  border: none;
+  border-radius: 5px;
+  width: 10%;
+  padding: 10px;
+  float: center;
+  font-size: 16px;
+  
+}
+
+.addButton {
+  padding: 10px;
+  width: 20%;
+  background: #d9d9d9;
+  color: #555;
+  float: center;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.addButton:hover {
+  background-color: greenyellow;
+}
+
+
+#tab5 {
+  text-align: left;
+}
+
+#output{
+  padding: 20px;
+  border: 2px solid black;
+  background-color: rgb(106, 106, 106);
+  min-height: 30px;
+  width: 50%;
+}
+
+.tab-icon {
+  width: 50px;
+  height: 50px;
+}
 
 </style>
 
@@ -88,8 +232,12 @@ h1 {
     </div>
 
     <div id="tab3" class="tabcontent">
-        <h1>tab3</h1>
-        <p>tab3 is the capital of Japan.</p>
+      <h1>Colors</h1>
+      <div>
+        <p class="tab3yellow">This is the first one</p>
+        <p class="tab3black">This is the second one</p>
+      </div>
+        <canvas id="myPieChart" width="1500" height="1500" style="display: block; box-sizing: border-box; height: 600px; width: 600px;"></canvas>
     </div>
 
     <div id="tab4" class="tabcontent">
@@ -98,17 +246,56 @@ h1 {
     </div>
 
     <div id="tab5" class="tabcontent">
+      <h1>-Choices Screen-</h1>
+      <h2>Camera Type #1</h2>
+      <input type="radio" id= "dSLR" name="cam_types" value="dSLR">
+      <label for="dSLR">dSLR</label><br>
+
+      <input type="radio" id= "mirrorLess" name="cam_types" value="mirrorLess">
+      <label for="mirrorLess">mirrorLess</label><br>
+
+      <br>
+      <h2>Camera Type #2</h2>
+      <select id="dropdown2">
+          <option value="dSLR">dSLR</option>
+          <option value="mirrorLess">mirrorLess</option>
+      </select>
+      <br>
+
+      <button onclick="camChoices()">Submit</button>
+
+      <p id="output"></p>
+
     </div>
+
 
     <div id="tab6" class="tabcontent">
+
+      <div id="tab6header" class="tab6header">
+        <h2> To-Do List </h2>
+        <input type="text" id="toDoInput" placeholder="Task..."/>
+        <span onclick="newElement()" class="addButton"> Add </span>
+      </div>
+
+      <ul id="taskList" class="taskList">
+        <li> Go to work </li>
+        <li class="checked"> Walk the dog </li>
+        <li> Complete homework </li>
+        <li> Make dinner </li>
+      </ul>
+
     </div>
 
-    <button class="tablink" onclick="openCity('tab1', this, 'red')" id="defaultOpen">tab1</button>
+    <button class="tablink" onclick="openCity('tab1', this, 'red')" id="defaultOpen">
+      <img src="column.png" alt="icon" class="tab-icon"><br>Text</button>
     <button class="tablink" onclick="openCity('tab2', this, 'green')"><img src="tab2_icon.png" class="tab2_icon"><br><br>LR</button>
-    <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
+    <button class="tablink" onclick="openCity('tab3', this, 'blue')">
+      <img src="pie-chart.png" alt="icon" class="tab-icon"><br>Pie Chart</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
-    <button class="tablink" onclick="openCity('tab5', this, 'purple')">tab5</button>
-    <button class="tablink" onclick="openCity('tab6', this, 'teal')">tab6</button>
+    <button class="tablink" onclick="openCity('tab5', this, 'purple')">
+      <img src="choices.png" alt="icon" class="tab-icon">Choices</button>
+    <button class="tablink" onclick="openCity('tab6', this, 'teal')">
+      <img src="to-do-list.png" alt="icon" class="tab-icon"><br>To-Do</button>
 
 </div>
 
@@ -130,8 +317,138 @@ function openCity(cityName,elmnt,color) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
+function camChoices(){
+  const selected = document.querySelector('input[name="cam_types"]:checked')
+
+  if (!selected) {
+    document.getElementById("output").textContent = "Please select a camera option.";
+    return;
+  }
+  const dropdown = document.getElementById("dropdown2").value;
+
+  document.getElementById("output").textContent ="You selected " + selected.value +" and " + dropdown;
+}
 // get the text from the other file cause having it here is annoying
 fetch("lorem.txt").then(response => response.text()).then(text => document.getElementById("tab1content").textContent = text);
+
+
+//tab6
+// appending x button children to the list items
+var myNodelist = document.getElementsByTagName("LI");
+var i;
+for (i = 0; i < myNodelist.length; i++) {
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+  span.className = "close";
+  span.appendChild(txt);
+  myNodelist[i].appendChild(span);
+}
+
+// helps us hide things that are "deleted"
+var close = document.getElementsByClassName("close");
+var i;
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function() {
+    var div = this.parentElement;
+    div.remove();
+  }
+}
+
+// toggle class list for list elements when clicked
+var list = document.querySelector('ul');
+list.addEventListener('click', function(ev) {
+  if (ev.target.tagName === 'LI') {
+    ev.target.classList.toggle('checked');
+  }
+}, false);
+
+function newElement() {
+  // create a new element on the page with tag str
+  var li = document.createElement("LI"); 
+  // get the string from the input element
+  var inputValue = document.getElementById("toDoInput").value;
+  // create a new text node with the string from input
+  var t = document.createTextNode(inputValue);
+  // append the text t into the new list element
+  li.appendChild(t);
+
+  if (inputValue === '') {
+    alert("You must write something!");
+  } else {
+    document.getElementById("taskList").appendChild(li);
+  }
+  document.getElementById("toDoInput").value = "";
+
+  // don't forget to add the close button to new elements
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+  span.className = "close";
+  span.appendChild(txt);
+  li.appendChild(span);
+
+  for (i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.style.display = "none";
+    }
+  }
+
+}
+// tab 3 pie chart code
+
+
+     const myContext = document.getElementById('myPieChart').getContext('2d');
+   
+     const myData = {
+        labels: ['Vegetables  ', 'Protein  ', 'Carbohydrates  ', 'Fruits    '],
+        datasets: [{
+           label: 'Dinner',
+           data: [25, 50, 30, 15],
+           backgroundColor: ['#78bd5e', '#bd5e6e', '#bda45e', '#5ebdbd']
+        }]
+     };
+  
+     const chartConfig = {
+        type: 'pie',
+        data: myData,
+        plugins: [ChartDataLabels],
+        options: {
+           events: [],
+           layout: {
+              padding: {
+                 top: 30
+              }
+           },
+           plugins: { 
+              legend: { 
+                 labels: { 
+                    font: { family: 'Consolas', size: 20 },
+                    padding: 5
+                 },
+                 position: 'bottom', 
+                 align: 'start',
+              },
+ 
+              datalabels: {
+                 color: '#111111',
+                 anchor: 'end', 
+                 align: 'end', 
+                 offset: 5,   
+                 font: {
+                   weight: 'bold',
+                   size: 16
+                 },
+                 formatter: (value) => { return value; }
+              }
+           }
+        }
+     };
+
+     myChart = new Chart(myContext, chartConfig);
+   
+   
+
+
 </script>
 
 </body></html>
