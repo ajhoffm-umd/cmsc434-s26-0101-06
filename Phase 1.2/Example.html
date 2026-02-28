@@ -1,6 +1,7 @@
 
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Example</title>
+<link rel="icon" href="choices.png">
 <style>
 
 .device { /* device specifications from professor golub */
@@ -68,6 +69,11 @@ h1 {
   min-height: 30px;
   width: 50%;
 }
+
+.tab-icon {
+  width: 50px;
+  height: 50px;
+}
 </style>
 
 
@@ -127,7 +133,8 @@ h1 {
     <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
     <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
-    <button class="tablink" onclick="openCity('tab5', this, 'purple')">Choices</button>
+    <button class="tablink" onclick="openCity('tab5', this, 'purple')">
+      <img src="choices.png" alt="icon" class="tab-icon">Choices</button>
     <button class="tablink" onclick="openCity('tab6', this, 'teal')">tab6</button>
 
 </div>
