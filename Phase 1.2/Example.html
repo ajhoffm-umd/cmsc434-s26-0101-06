@@ -69,7 +69,17 @@ h1 {
 
 /* Style each tab content individually */
 #tab1 {background-color:red; text-align:left; }
-#tab2 {background-color:green;}
+#tab2 { background-color:green; position: relative; }
+.bottomRight { 
+  position: absolute; 
+  right: 50px; 
+  bottom: 50px; 
+  text-align: right; 
+}
+.tab2_icon {
+  width: 30px;
+  height: 30px;
+}
 #tab3 {background-color:blue;}
 #tab4 {background-color:orange;}
 #tab5 {background-color:purple;}
@@ -215,8 +225,10 @@ input {
     </div>
         
     <div id="tab2" class="tabcontent">
-        <h1>tab2</h1>
-        <p>tab2 is the capital of France.</p>
+        <h1> -Text in Lower Right- </h1>
+        <div class="bottomRight">
+          <p id="tab2content">Down here!</p>
+        </div>
     </div>
 
     <div id="tab3" class="tabcontent">
@@ -276,7 +288,7 @@ input {
 
     <button class="tablink" onclick="openCity('tab1', this, 'red')" id="defaultOpen">
       <img src="column.png" alt="icon" class="tab-icon"><br>Text</button>
-    <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
+    <button class="tablink" onclick="openCity('tab2', this, 'green')"><img src="tab2_icon.png" class="tab2_icon"><br><br>LR</button>
     <button class="tablink" onclick="openCity('tab3', this, 'blue')">
       <img src="pie-chart.png" alt="icon" class="tab-icon"><br>Pie Chart</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
