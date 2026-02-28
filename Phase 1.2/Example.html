@@ -164,6 +164,11 @@ input {
   background-color: greenyellow;
 }
 
+.tab-icon {
+  width: 50px;
+  height: 50px;
+}
+
 </style>
 
 
@@ -212,12 +217,15 @@ input {
 
     </div>
 
-    <button class="tablink" onclick="openCity('tab1', this, 'red')" >tab1</button>
+    <button class="tablink" onclick="openCity('tab1', this, 'red')" >
+      <img src="column.png" alt="icon" class="tab-icon"><br>Text</button>
     <button class="tablink" onclick="openCity('tab2', this, 'green')">tab2</button>
-    <button class="tablink" onclick="openCity('tab3', this, 'blue')">tab3</button>
+    <button class="tablink" onclick="openCity('tab3', this, 'blue')">
+      <img src="pie-chart.png" alt="icon" class="tab-icon"><br>Pie Chart</button>
     <button class="tablink" onclick="openCity('tab4', this, 'orange')">tab4</button>
     <button class="tablink" onclick="openCity('tab5', this, 'purple')">tab5</button>
-    <button class="tablink" onclick="openCity('tab6', this, 'teal')" id="defaultOpen">tab6</button>
+    <button class="tablink" onclick="openCity('tab6', this, 'teal')" id="defaultOpen">
+      <img src="to-do-list.png" alt="icon" class="tab-icon"><br>To-Do</button>
 
 </div>
 
