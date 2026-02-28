@@ -53,6 +53,22 @@ h1 {
   overflow-y: auto;
 }
 
+.center {
+  text-align: center;
+}
+
+#popup {
+  color:black;
+  background-color: red;
+  display: none;
+  align-items: center;
+  padding: 20px;
+}
+
+.closeButton {
+  float: right;
+  cursor: pointer;
+}
 .tab3yellow {
   background-color: black;
   color: yellow; 
@@ -81,7 +97,7 @@ h1 {
   height: 30px;
 }
 #tab3 {background-color:blue;}
-#tab4 {background-color:orange;}
+#tab4 {background-color:orange; text-align:left;}
 #tab5 {background-color:purple;}
 #tab6 {background-color:teal;}
 
@@ -245,8 +261,15 @@ input.todoinput {
     </div>
 
     <div id="tab4" class="tabcontent">
-        <h1>tab4</h1>
-        <p>tab4 is the capital of Norway.</p>
+        <h1>-User Profile-</h1>
+        <div class = "center">
+          <img id = "profileImage"src = "images/SmileyFace.png" alt="Smiley Face" style="width:150px;height:150px;">
+          <h2>Smiley J. Smiley</h2>
+        </div>
+        <div id = "popup" class = "hidden">
+          <span id = "closePopup" class = "closeButton">X</span>
+          <h2><b>Warning!</b> Do not click on the profile image.</h2>
+        </div>
     </div>
 
     <div id="tab5" class="tabcontent">
@@ -336,6 +359,17 @@ function camChoices(){
 // get the text from the other file cause having it here is annoying
 fetch("lorem.txt").then(response => response.text()).then(text => document.getElementById("tab1content").textContent = text);
 
+const profileImage = document.getElementById("profileImage");
+const popup = document.getElementById("popup");
+const closePopup = document.getElementById("closePopup");
+
+profileImage.addEventListener("click", () => {
+  popup.style.display = "block";
+});
+
+closePopup.addEventListener("click", () => {
+  popup.style.display = "none";
+});
 
 //tab6
 // appending x button children to the list items
