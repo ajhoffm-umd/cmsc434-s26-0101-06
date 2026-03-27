@@ -1,0 +1,109 @@
+<html lang="en"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Kitchen Kompanion</title>
+<style>
+
+    /* root colors */
+    :root {
+        --bg-main: #DDDDDD;
+    }
+
+    /* device specifications from professor golub */
+    .device { 
+    margin:auto; 
+    max-width: 640px;
+    max-height: 960px;
+    width: 640px;
+    height: 960px;
+    overflow: hidden;
+    background-color: #555;
+    position: relative;
+    font-size: 48pt;
+    }
+
+    /* DEVICE AND ROOT SHOULD BE THE ONLY THINGs HERE */
+
+</style>
+
+<link rel="stylesheet" href="navbar.css">
+
+</head>
+    <body>
+        <!--- everything should go inside the device -->
+        <div class="device">
+
+            <!--- kitchen inventory tab here -->
+            <div id="pantry" class="tabcontent">
+
+                <p> pantry I </p>
+            </div>
+
+            <!--- live update grocery list here -->
+            <div id="grocerylist" class="tabcontent">
+                <p>gorcery</p>
+            </div>
+
+            <!-- recipes tab here -->
+            <div id="recipes" class="tabcontent">
+                <p>recipe</p>
+            </div>
+
+            <!-- members tab here -->
+            <div id="members" class="tabcontent">
+                <p>members</p>
+            </div>
+
+            <!-- navbar here -->
+            <button class="tablink" onclick="openTab('pantry', this)" id="defaultOpen">Pantry</button>
+            <button class="tablink" onclick="openTab('grocerylist', this)">List</button>
+            <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
+            <button class="tablink" onclick="openTab('members', this)">Members</button>
+
+        </div>
+
+
+        <script>
+
+            // rips colors out of root styling, add more as needed
+            const rootStyles = getComputedStyle(document.documentElement);
+            const bg_main = rootStyles.getPropertyValue('--bg-main');
+
+            /* THE ONLY CODE IN HERE SHOULD BE NAVBAR!! */
+            /* use a different file for anything else please */
+
+            function openTab(tabName, elmnt) {
+                var i, tabcontent, tablinks;
+
+                // get all tabcontents
+                tabcontent = document.getElementsByClassName("tabcontent");
+
+                // set all to hidden
+                for(i=0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // get all tab buttons
+                tablinks = document.getElementsByClassName("tablink");
+
+                // set all to basic background color
+                for(i=0; i < tablinks.length; i++) {
+                    tablinks[i].style.backgroundColor = "";
+                    tablinks[i].style.color = bg_main;
+                }
+
+                // set selected tab content to visible and tab button to selected
+                document.getElementById(tabName).style.display = "block";
+                elmnt.style.backgroundColor = bg_main;
+                elmnt.style.color = "black";
+
+            }
+
+            // default open tab
+
+            document.getElementById("defaultOpen").click();
+
+
+        </script>
+
+    </body>
+</html>
