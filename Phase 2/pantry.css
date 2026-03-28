@@ -1,0 +1,209 @@
+
+.pantrycontainer {
+    height: 98%;
+    width: inherit; 
+
+    
+    background-color: var(--bg-main);
+    border-style: var(--wire);
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0px;
+}
+
+/* SEARCHING DIV */
+
+.search {
+    border-color: black; 
+    border-style: var(--wire);
+
+    height: 50px;
+    width: inherit;
+    margin: 0px 20px 0px 20px;
+    padding: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-content: center; 
+
+    
+}
+
+.search input[type=text] {
+    height: 80%;
+    width: 60%;
+    
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+.search button {
+    height: 80%;
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+/* SORTING DIV */
+
+.sort {
+    border-color: black; 
+    border-style: var(--wire);
+
+    height: 50px;
+    width: inherit;
+    margin: 0px 20px 0 20px;
+
+    display: flex;
+    justify-content: center;
+    align-content: center; 
+    
+}
+
+.sort button {
+    height: 80%;
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+    margin-bottom: 8px;
+    font-size: 17px;
+    width: 100px;
+}
+
+.sort h2 {
+    font-size: 20pt;
+    margin-top: 13px;
+    margin-right: 20px;
+
+}
+
+/* list header */
+
+.listheader {
+    border-color: black; 
+    border-style: var(--wire);
+
+    height: 50px;
+    width: inherit;
+    margin: 20px 20px 0px 20px;
+    padding-left: 10px;
+
+    display: flex;
+    justify-content: left;
+    align-content: center; 
+    
+}
+
+.listheader h2 {
+    font-size: 20pt;
+    margin-top: 13px;
+    margin-right: 20px;
+
+}
+
+.listheader select {
+    width: 40%;
+    margin: 8px 0 0 0;
+}
+
+/* add item form */
+
+.form-popup {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -80%);
+  border: 2px solid #ccc;
+  background-color: white;
+  padding: 20px;
+  z-index: 1000;
+  height: auto;
+  max-height: 700px;
+  width: 500px;
+}
+
+.form-popup h2 {
+    font-size: 20pt;
+}
+
+.form-popup label {
+    font-size: 16pt;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.form-container select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+/* list item aesthetics */
+
+.pantrylist {
+    border-color: black;
+    border-style: none;
+
+    background-color: var(--bg-nav);
+    border-radius: 40px;
+
+    height: 66%;
+
+    margin: 20px 0px 20px 20px;
+    padding-top: 10px;
+
+    list-style-type: none;
+
+    width: 565px;
+
+    overflow-y:scroll;
+    overflow-x:hidden;
+
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; 
+  gap: 10px;
+  padding: 5px 0;
+  width: 550px;
+  font-size: 12pt;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+.pantrylist li {
+    background-color: var(--bg-main);
+    margin: 5px 10px 10px 15px;
+    padding: 5px 10px 5px 10px;
+    transform: translateX(-40px);
+    width: 530px;
+    font-size: 20;
+    border-radius: 30px
+}
