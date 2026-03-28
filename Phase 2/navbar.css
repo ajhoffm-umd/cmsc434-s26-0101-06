@@ -2,30 +2,57 @@
 
 /* Style the tab buttons */
 .tablink {
-  background-color: #555;
-  color: white;
+  background-color: var(--bg-nav);
+  color: black;
   float: left;
   border: none;
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
-  font-size: 32px;
-  width: calc(100% / 4); /* kind of old solution */
-  height: 15%;
-  border-bottom-left-radius: 30px; 
-  border-bottom-right-radius: 30px;
+  font-size: 24px;
+  width: calc((100% / 4)); /* kind of old solution */
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+}
+
+/* the shaped container for the buttons */
+.tabcontainer {
+    background-color: var(--bg-nav);
+    float: left;
+    display: flex;
+    width: var(--screen-width);
+    height: 100%;
+    width: 90%;
+    gap: 1%;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    padding-left: 10px;
+    padding-right: 10px; 
+    padding-top: 10px; 
 }
 
 .tablink:hover {
-  background-color: #777;
+  background-color: black;
 }
 
 /* Set default styles for tab content */
 .tabcontent {
-  background: var(--bg-main);
-  height: 75%;
+  height: 74%;
   display: none;
   padding: 50px;
   text-align: center;
   overflow-y: auto;
+}
+
+/*  contains the shaped navbar container and buttons */
+.navbar {
+    float: left;
+    display: flex;
+    height: 16%;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
 }

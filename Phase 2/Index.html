@@ -5,7 +5,11 @@
 
     /* root colors */
     :root {
-        --bg-main: #DDDDDD;
+        --bg-main: #e3f0fa;
+        --bg-nav: #FEFFFF;
+        --text-def: black;
+        --button-active: #2e7d32;
+        --screen-width: 640px;
     }
 
     /* device specifications from professor golub */
@@ -16,7 +20,7 @@
     width: 640px;
     height: 960px;
     overflow: hidden;
-    background-color: #555;
+    background-color: var(--bg-main);
     position: relative;
     font-size: 32pt;
     }
@@ -54,10 +58,14 @@
             </div>
 
             <!-- navbar here -->
-            <button class="tablink" onclick="openTab('pantry', this)" id="defaultOpen">Pantry</button>
-            <button class="tablink" onclick="openTab('grocerylist', this)">List</button>
-            <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
-            <button class="tablink" onclick="openTab('members', this)">Members</button>
+            <div class="navbar">
+                <div class="tabcontainer">
+                    <button class="tablink" onclick="openTab('pantry', this)" id="defaultOpen">Pantry</button>
+                    <button class="tablink" onclick="openTab('grocerylist', this)">List</button>
+                    <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
+                    <button class="tablink" onclick="openTab('members', this)">Members</button>
+                </div>
+            </div>
 
         </div>
 
@@ -67,6 +75,9 @@
             // rips colors out of root styling, add more as needed
             const rootStyles = getComputedStyle(document.documentElement);
             const bg_main = rootStyles.getPropertyValue('--bg-main');
+            const text_def = rootStyles.getPropertyValue('--text-def');
+            const bg_nav = rootStyles.getPropertyValue('--bg-nav');
+            const button_active = rootStyles.getPropertyValue('--button-active');
 
             /* THE ONLY CODE IN HERE SHOULD BE NAVBAR!! */
             /* use a different file for anything else please */
@@ -87,14 +98,14 @@
 
                 // set all to basic background color
                 for(i=0; i < tablinks.length; i++) {
-                    tablinks[i].style.backgroundColor = "";
-                    tablinks[i].style.color = bg_main;
+                    tablinks[i].style.backgroundColor = bg_nav;
+                    tablinks[i].style.color = text_def;
                 }
 
                 // set selected tab content to visible and tab button to selected
                 document.getElementById(tabName).style.display = "block";
-                elmnt.style.backgroundColor = bg_main;
-                elmnt.style.color = "black";
+                elmnt.style.backgroundColor = button_active;
+                elmnt.style.color = "white";
 
             }
 
