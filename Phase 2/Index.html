@@ -39,7 +39,8 @@
             <!--- kitchen inventory tab here -->
             <div id="pantry" class="tabcontent">
 
-                <p> pantry I </p>
+                <h1>Inventory</h1>
+
             </div>
 
             <!--- live update grocery list here -->
@@ -98,14 +99,12 @@
 
                 // set all to basic background color
                 for(i=0; i < tablinks.length; i++) {
-                    tablinks[i].style.backgroundColor = bg_nav;
-                    tablinks[i].style.color = text_def;
+                    tablinks[i].classList.remove("nav-active");
                 }
 
                 // set selected tab content to visible and tab button to selected
                 document.getElementById(tabName).style.display = "block";
-                elmnt.style.backgroundColor = button_active;
-                elmnt.style.color = "white";
+                elmnt.classList.add("nav-active");
 
             }
 
