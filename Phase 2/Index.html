@@ -39,35 +39,35 @@
         <div class="device">
 
             <!--- kitchen inventory tab here -->
-            <div id="pantry" class="tabcontent">
+            <div id="inv" class="tabcontent">
 
-                <div class="pantrycontainer">
+                <div class="invcontainer">
 
-                    <h1>Pantry</h1>
+                    <h1>Inventory</h1>
 
                     <div class="search">
-                        <input id="listitemsearch" type="text" placeholder="Search...">
-                        <button id="sortsearch" onclick="searchListItems()"> Sort by Relevance</button>
+                        <input id="invsearch" type="text" placeholder="Search...">
+                        <button id="invsearchsort" onclick="searchListItems()"> Sort by Relevance</button>
                     </div>
 
                     <div class="sort">
                         <h2>Sort by: </h2>
-                        <button id="sortalpha" onclick="sortListItemAlpha()">Alpha</button>
-                        <button id="sortexp" onclick="sortListItemExp()">Expiration</button>
+                        <button id="invsortalpha" onclick="sortListItemAlpha()">Alpha</button>
+                        <button id="invsortexp" onclick="sortListItemExp()">Expiration</button>
                     </div>
 
                     <div class="listheader">
                         <h2> Showing: </h2>
                         <select onchange="updateListDisplay()" id="listdropdown">
                         </select>
-                        <button id="itemadd" class="itemadd" onclick="openListAddForm()">add</button>
-                        <button id="itemdeletemodetoggle" onclick="toggleListDeleteMode()">trash</button>
-                        <button id="itemdeletecancel" class="itemdeletecancel" onclick="itemDeleteCancel()">cancel</button>
+                        <button id="invitemadd" class="itemadd" onclick="openListAddForm()">add</button>
+                        <button id="invitemdeletetoggle" onclick="toggleListDeleteMode()">trash</button>
+                        <button id="invdeletecancel" class="itemdeletecancel" onclick="itemDeleteCancel()">cancel</button>
                     </div>
 
                     <div class="listarea">
 
-                        <ul id="pantrylist" class="pantrylist">
+                        <ul id="invlist" class="pantrylist">
                             <li class="header-row">
                                 <span>Name</span>
                                 <span>Quantity</span>
@@ -86,7 +86,11 @@
 
             <!--- live update grocery list here -->
             <div id="grocerylist" class="tabcontent">
-                <p>gorcery</p>
+                
+                <h1>Grocery List</h1>
+
+                
+
             </div>
 
             <!-- recipes tab here -->
@@ -102,7 +106,7 @@
             <!-- navbar here -->
             <div class="navbar">
                 <div class="tabcontainer">
-                    <button class="tablink" onclick="openTab('pantry', this)" id="defaultOpen">Pantry</button>
+                    <button class="tablink" onclick="openTab('inv', this)" id="defaultOpen">Inventory</button>
                     <button class="tablink" onclick="openTab('grocerylist', this)">List</button>
                     <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
                     <button class="tablink" onclick="openTab('members', this)">Members</button>
@@ -110,22 +114,22 @@
             </div>
 
             <!-- Pantry List Add Form -->
-            <div id="listaddform" class="form-popup">
+            <div id="invaddform" class="form-popup">
                 <form class="form-container" onsubmit="return addListItemFormSubmit()">
                     <h2>New Item</h2>
 
-                    <label for="newlistitemname"><b>Name</b></label>
-                    <p id="formnamewarning" class="formwarning">An Item with this name already exists!</p>
-                    <input type="text" id="newlistitemname" placeholder="Enter item name..." required>
+                    <label for="invnewname"><b>Name</b></label>
+                    <p id="invformnamewarning" class="formwarning">An Item with this name already exists!</p>
+                    <input type="text" id="invnewname" placeholder="Enter item name..." required>
 
-                    <label for="newlistitemdropdown"><b>Location</b></label>
-                    <select id="newlistitemdropdown" required></select>
+                    <label for="invnewdrop"><b>Location</b></label>
+                    <select id="invnewdrop" required></select>
 
-                    <label for="newlistitemquantity"><b>Quantity</b></label>
-                    <input type="text" id="newlistitemquantity" placeholder="Enter item quantity...">
+                    <label for="invnewquantity"><b>Quantity</b></label>
+                    <input type="text" id="invnewquantity" placeholder="Enter item quantity...">
 
-                    <label for="newlistitemdate"><b>Expiration Date</b></label>
-                    <input type="date" id="newlistitemdate">
+                    <label for="invnewdate"><b>Expiration Date</b></label>
+                    <input type="date" id="invnewdate">
 
                     <button type="submit">Submit</button>
                     <button type="button" onclick="closeListAddForm()">Close</button>

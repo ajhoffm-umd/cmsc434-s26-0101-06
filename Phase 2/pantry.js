@@ -45,7 +45,7 @@ var kitchenItems = [
 function updateListDisplay() {
     console.log("updating with");
     console.log(kitchenItems);
-    const pantryList = document.getElementById('pantrylist');
+    const pantryList = document.getElementById('invlist');
     pantryList.innerHTML = '<li class="header-row"><span>Name</span><span>Quantity</span><span>Expiration</span></li>';
     kitchenItems.forEach(item => {pushElemListAdd(item);});
 }
@@ -97,7 +97,7 @@ function pushElemListAdd(item) {
         invListItemOnClick(this);
     }
 
-    document.getElementById("pantrylist").appendChild(li);
+    document.getElementById("invlist").appendChild(li);
 }
 
 kitchenItems.forEach(item => {pushElemListAdd(item)});
@@ -110,7 +110,7 @@ var deleteQueue = [];
 function invListItemOnClick(elem) {
     if (itemDeleteFlag) {
 
-        var i = deleteQueue.indexOf(elem.id.toLowerCase());
+        var i = deleteQueue.indexOf(elem);
         console.log(i);
         if (i >= 0) {
             console.log("removing " + elem.id + " from queue");
@@ -120,6 +120,7 @@ function invListItemOnClick(elem) {
             console.log("adding " + elem.id + " to queue");
             deleteQueue.push(elem);
             elem.style.background = "red";
+            console.log(deleteQueue);
         }
         
     } 
@@ -129,17 +130,17 @@ function toggleListDeleteMode() {
     
     itemDeleteFlag = !itemDeleteFlag;
     if(itemDeleteFlag) {
-        document.getElementById("sortsearch").disabled = true;
-        document.getElementById("sortalpha").disabled = true;
-        document.getElementById("sortexp").disabled = true;
-        document.getElementById("itemdeletemodetoggle").style.background = "red";
-        document.getElementById("itemadd").style.display = "none";
-        document.getElementById("itemdeletecancel").style.display = "block";
+        document.getElementById("invsearchsort").disabled = true;
+        document.getElementById("invsortalpha").disabled = true;
+        document.getElementById("invsortexp").disabled = true;
+        document.getElementById("invitemdeletetoggle").style.background = "red";
+        document.getElementById("invitemadd").style.display = "none";
+        document.getElementById("invdeletecancel").style.display = "block";
     } else {
-        document.getElementById("sortsearch").disabled = false;
-        document.getElementById("sortalpha").disabled = false;
-        document.getElementById("sortexp").disabled = false;
-        document.getElementById("itemdeletemodetoggle").style.background = "green";
+        document.getElementById("invsearchsort").disabled = false;
+        document.getElementById("invsortalpha").disabled = false;
+        document.getElementById("invsortexp").disabled = false;
+        document.getElementById("invitemdeletetoggle").style.background = "green";
         if (deleteQueue.length != 0) {
             deleteQueue.forEach(elem => {
                 console.log("removing " + elem.id);
@@ -147,23 +148,23 @@ function toggleListDeleteMode() {
                 elem.remove();
             });
         }
-        document.getElementById("itemdeletemodetoggle").style.background = "green";
-        document.getElementById("itemadd").style.display = "block";
-        document.getElementById("itemdeletecancel").style.display = "none";
+        document.getElementById("invitemdeletetoggle").style.background = "green";
+        document.getElementById("invitemadd").style.display = "block";
+        document.getElementById("invdeletecancel").style.display = "none";
     }
 }
 
 function itemDeleteCancel() {
-    document.getElementById("sortsearch").disabled = false;
-    document.getElementById("sortalpha").disabled = false;
-    document.getElementById("sortexp").disabled = false;
+    document.getElementById("invsearchsort").disabled = false;
+    document.getElementById("invsortalpha").disabled = false;
+    document.getElementById("invsortexp").disabled = false;
     deleteQueue.forEach(elem =>{
         elem.style.background = bg_main;
     });
     deleteQueue = [];
-    document.getElementById("itemdeletemodetoggle").style.background = "green";
-    document.getElementById("itemadd").style.display = "block";
-    document.getElementById("itemdeletecancel").style.display = "none";
+    document.getElementById("invitemdeletetoggle").style.background = "green";
+    document.getElementById("invitemadd").style.display = "block";
+    document.getElementById("invdeletecancel").style.display = "none";
     itemDeleteFlag = false;
     
 }
@@ -178,15 +179,15 @@ function addListItemFormSubmit() {
 
     var name, location, quantity, expirationDate;
 
-    name = document.getElementById("newlistitemname").value.trim();
-    location = document.getElementById("newlistitemdropdown").value.trim();
-    quantity = document.getElementById("newlistitemquantity").value.trim();
-    expirationDate = document.getElementById("newlistitemdate").value.trim();
+    name = document.getElementById("invnewname").value.trim();
+    location = document.getElementById("invnewdrop").value.trim();
+    quantity = document.getElementById("invnewquantity").value.trim();
+    expirationDate = document.getElementById("invnewdate").value.trim();
 
     var nameflag = false;
     kitchenItems.forEach(item => {
         if (item.name.toLowerCase() == name.toLowerCase()) {
-            document.getElementById("formnamewarning").style.display = "block";
+            document.getElementById("invformnamewarning").style.display = "block";
             nameflag = true;
             console.log("known");
         }
@@ -221,10 +222,10 @@ function addListItemFormSubmit() {
 // open the add an item form
 
 function openListAddForm() {
-    document.getElementById("listaddform").style.display = "block";
+    document.getElementById("invaddform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 
-    const selectElement = document.getElementById('newlistitemdropdown');
+    const selectElement = document.getElementById('invnewdrop');
 
     let locationOptions = '';
     defaultKitchenLocations.forEach(location => {
@@ -235,9 +236,9 @@ function openListAddForm() {
 }
 
 function closeListAddForm() {
-  document.getElementById("listaddform").style.display = "none";
+  document.getElementById("invaddform").style.display = "none";
   document.getElementById("overlay").style.display = "none";
-  document.getElementById("formnamewarning").style.display = "none";
+  document.getElementById("invformnamewarning").style.display = "none";
 }
 
 
@@ -308,10 +309,10 @@ function levenshtein(a, b) {
 function searchListItems() {
     console.log("pressed");
 
-    const query = document.getElementById("listitemsearch").value.trim();
+    const query = document.getElementById("invsearch").value.trim();
 
     kitchenItems.forEach(item => {
-        item.dist = levenshtein(item.name, query);
+        item.dist = levenshtein(item.name, query) / ((+item.name.includes(query) * 7) + 1);
     });
 
     kitchenItems.sort((a, b) => a.dist - b.dist);
