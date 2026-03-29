@@ -123,7 +123,9 @@ function invListItemOnClick(elem) {
             console.log(deleteQueue);
         }
         
-    } 
+    } else {
+        openListEditForm(elem);
+    }
 }
 
 function toggleListDeleteMode() {
@@ -219,7 +221,7 @@ function addListItemFormSubmit() {
 
 }
 
-// open the add an item form
+// open the add and edit an item forms
 
 function openListAddForm() {
     document.getElementById("invaddform").style.display = "block";
@@ -239,6 +241,100 @@ function closeListAddForm() {
   document.getElementById("invaddform").style.display = "none";
   document.getElementById("overlay").style.display = "none";
   document.getElementById("invformnamewarning").style.display = "none";
+}
+
+var openItem = null;
+var openElem = null;
+
+// open the edit an item form on click the item
+function openListEditForm(elem) {
+    // set the form visible and overlay
+    document.getElementById("inveditform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+
+    // get the dropdown element and set locations
+    const selectElement = document.getElementById('inveditdrop');
+
+    let locationOptions = '';
+    defaultKitchenLocations.forEach(location => {
+    locationOptions += `<option value="${location}">${location}</option>`;
+    });
+
+    selectElement.innerHTML = locationOptions;
+
+    // get the current item stats
+    console.log(elem.id);
+    openItem = kitchenItems.find(item => item.name == elem.id);
+    openElem = elem;
+    console.log(openItem);
+
+    document.getElementById("inveditdrop").value = openItem.location;
+
+    // set defaults
+    document.getElementById("inveditname").value = openItem.name;
+    if (openItem.hasOwnProperty("quantity")) {
+        document.getElementById("inveditquantity").value = openItem.quantity;
+    } else {
+        document.getElementById("inveditquantity").value = "";
+    }
+    if (openItem.hasOwnProperty("expirationDate")) {
+        document.getElementById("inveditdate").value = openItem.expirationDate;
+    } else {
+        document.getElementById("inveditdate").value = "";
+    }
+
+}
+
+function closeListEditForm() {
+  openItem = null;
+  openElem = null;
+  document.getElementById("inveditform").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+  document.getElementById("invformnamewarningedit").style.display = "none";
+}
+
+function editListItemFormSubmit() {
+
+    try {
+
+    kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() !== openElem.id.toLowerCase());
+    openElem.remove();
+    
+    var name, location, quantity, expirationDate;
+
+    name = document.getElementById("inveditname").value.trim();
+    location = document.getElementById("inveditdrop").value.trim();
+    quantity = document.getElementById("inveditquantity").value.trim();
+    expirationDate = document.getElementById("inveditdate").value.trim();
+
+    const newItem = {
+        name,
+        location
+    };
+
+    if (quantity !== "") {
+        newItem.quantity = quantity;
+    }
+
+    if (expirationDate !== "") {
+        newItem.expirationDate = expirationDate;
+    }
+
+    kitchenItems.push(newItem);
+
+    pushElemListAdd(newItem);
+
+    closeListEditForm();
+
+    updateListDisplay();
+}
+catch (e) {
+    console.log(e);
+    return false;
+}
+
+    return false; // prevents page refresh
+
 }
 
 

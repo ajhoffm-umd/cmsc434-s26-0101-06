@@ -136,6 +136,29 @@
                 </form>
             </div>
 
+            <!-- Pantry List Edit Form -->
+            <div id="inveditform" class="form-popup">
+                <form class="form-container" onsubmit="return editListItemFormSubmit()">
+                    <h2>Edit Item</h2>
+
+                    <label for="inveditname"><b>Name</b></label>
+                    <p id="invformnamewarningedit" class="formwarning">An Item with this name already exists!</p>
+                    <input type="text" id="inveditname" placeholder="Enter item name..." required>
+
+                    <label for="inveditdrop"><b>Location</b></label>
+                    <select id="inveditdrop" required></select>
+
+                    <label for="inveditquantity"><b>Quantity</b></label>
+                    <input type="text" id="inveditquantity" placeholder="Enter item quantity...">
+
+                    <label for="inveditdate"><b>Expiration Date</b></label>
+                    <input type="date" id="inveditdate">
+
+                    <button type="submit">Submit</button>
+                    <button type="button" onclick="closeListEditForm()">Close</button>
+                </form>
+            </div>
+
             <div id="overlay" class="overlay"></div>
 
         </div>
