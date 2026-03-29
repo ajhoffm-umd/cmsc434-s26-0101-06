@@ -10,7 +10,7 @@
         --text-def: black;
         --button-active: #2e7d32;
         --screen-width: 640px;
-        --wire: solid;
+        --wire: none;
     }
 
     /* device specifications from professor golub */
@@ -47,21 +47,22 @@
 
                     <div class="search">
                         <input id="listitemsearch" type="text" placeholder="Search...">
-                        <button onclick="searchListItems()"> Sort by Relevance</button>
+                        <button id="sortsearch" onclick="searchListItems()"> Sort by Relevance</button>
                     </div>
 
                     <div class="sort">
                         <h2>Sort by: </h2>
-                        <button onclick="sortListItemAlpha()">Alpha</button>
-                        <button onclick="sortListItemExp()">Expiration</button>
+                        <button id="sortalpha" onclick="sortListItemAlpha()">Alpha</button>
+                        <button id="sortexp" onclick="sortListItemExp()">Expiration</button>
                     </div>
 
                     <div class="listheader">
                         <h2> Showing: </h2>
                         <select onchange="updateListDisplay()" id="listdropdown">
                         </select>
-                        <button onclick="openListAddForm()">add</button>
-                        <button>trash</button>
+                        <button id="itemadd" class="itemadd" onclick="openListAddForm()">add</button>
+                        <button id="itemdeletemodetoggle" onclick="toggleListDeleteMode()">trash</button>
+                        <button id="itemdeletecancel" class="itemdeletecancel" onclick="itemDeleteCancel()">cancel</button>
                     </div>
 
                     <div class="listarea">
@@ -114,6 +115,7 @@
                     <h2>New Item</h2>
 
                     <label for="newlistitemname"><b>Name</b></label>
+                    <p id="formnamewarning" class="formwarning">An Item with this name already exists!</p>
                     <input type="text" id="newlistitemname" placeholder="Enter item name..." required>
 
                     <label for="newlistitemdropdown"><b>Location</b></label>

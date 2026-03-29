@@ -10,7 +10,7 @@
 
 h1 {
     font-size: 40px;
-    margin: 0px;
+    margin: 10px;
 }
 
 /* SEARCHING DIV */
@@ -82,6 +82,16 @@ h1 {
 
 }
 
+/* SHOWING DIV */
+
+.itemadd {
+    display: block;
+}
+
+.itemdeletecancel {
+    display: none;
+}
+
 /* list header */
 
 .listheader {
@@ -118,7 +128,7 @@ h1 {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -80%);
+  transform: translate(-50%, -60%);
   border: 2px solid #ccc;
   background-color: white;
   padding: 20px;
@@ -126,6 +136,14 @@ h1 {
   height: auto;
   max-height: 700px;
   width: 500px;
+}
+
+.formwarning {
+    color: red;
+    font-size: 16px;
+    padding: 0px;
+    margin: 0px;
+    display: none;
 }
 
 .form-popup h2 {
