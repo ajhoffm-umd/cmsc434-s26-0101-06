@@ -32,6 +32,7 @@
 
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="pantry.css">
+<link rel="stylesheet" href="list.css">
 
 </head>
     <body>
@@ -47,22 +48,22 @@
 
                     <div class="search">
                         <input id="invsearch" type="text" placeholder="Search...">
-                        <button id="invsearchsort" onclick="searchListItems()"> Sort by Relevance</button>
+                        <button id="invsearchsort" onclick="searchInvItems()"> Sort by Relevance</button>
                     </div>
 
                     <div class="sort">
                         <h2>Sort by: </h2>
-                        <button id="invsortalpha" onclick="sortListItemAlpha()">Alpha</button>
-                        <button id="invsortexp" onclick="sortListItemExp()">Expiration</button>
+                        <button id="invsortalpha" onclick="sortInvItemAlpha()">Alpha</button>
+                        <button id="invsortexp" onclick="sortInvItemExp()">Expiration</button>
                     </div>
 
                     <div class="listheader">
                         <h2> Showing: </h2>
-                        <select onchange="updateListDisplay()" id="listdropdown">
+                        <select onchange="updateInvDisplay()" id="listdropdown">
                         </select>
-                        <button id="invitemadd" class="itemadd" onclick="openListAddForm()">add</button>
-                        <button id="invitemdeletetoggle" onclick="toggleListDeleteMode()">trash</button>
-                        <button id="invdeletecancel" class="itemdeletecancel" onclick="itemDeleteCancel()">cancel</button>
+                        <button id="invitemadd" class="itemadd" onclick="openInvAddForm()">add</button>
+                        <button id="invitemdeletetoggle" onclick="toggleInvDeleteMode()">trash</button>
+                        <button id="invdeletecancel" class="itemdeletecancel" onclick="itemInvDeleteCancel()">cancel</button>
                     </div>
 
                     <div class="listarea">
@@ -89,7 +90,29 @@
                 
                 <h1>Grocery List</h1>
 
-                
+                <div class="grocerycontainer">
+
+                    <div class="listheader">
+
+                        <button id="groceryitemadd" class="itemadd" onclick="openListAddForm()">add</button>
+
+                    </div>
+
+                    <div class="listarea">
+
+                        <ul id="grocerylist" class="grocerylist">
+                            <li class="header-row-grocery">
+                                <span>Name</span>
+                                <span>Quantity</span>
+                                <span>Expiration</span>
+                                <span></span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -106,8 +129,8 @@
             <!-- navbar here -->
             <div class="navbar">
                 <div class="tabcontainer">
-                    <button class="tablink" onclick="openTab('inv', this)" id="defaultOpen">Inventory</button>
-                    <button class="tablink" onclick="openTab('grocerylist', this)">List</button>
+                    <button class="tablink" onclick="openTab('inv', this)" >Inventory</button>
+                    <button class="tablink" onclick="openTab('grocerylist', this)" id="defaultOpen">List</button>
                     <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
                     <button class="tablink" onclick="openTab('members', this)">Members</button>
                 </div>

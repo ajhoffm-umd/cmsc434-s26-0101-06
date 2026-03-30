@@ -13,7 +13,7 @@ defaultKitchenLocations.forEach(location => {
 locationOptions += `<option value="${location}">${location}</option>`;
 });
 
-var itemDeleteFlag = false;
+var itemInvDeleteFlag = false;
 
 selectElement.innerHTML = locationOptions;
 
@@ -42,7 +42,7 @@ var kitchenItems = [
 ];
 
 // update list depending on selection
-function updateListDisplay() {
+function updateInvDisplay() {
     console.log("updating with");
     console.log(kitchenItems);
     const pantryList = document.getElementById('invlist');
@@ -108,7 +108,7 @@ kitchenItems.forEach(item => {pushElemListAdd(item)});
 var deleteQueue = [];
 
 function invListItemOnClick(elem) {
-    if (itemDeleteFlag) {
+    if (itemInvDeleteFlag) {
 
         var i = deleteQueue.indexOf(elem);
         console.log(i);
@@ -124,14 +124,14 @@ function invListItemOnClick(elem) {
         }
         
     } else {
-        openListEditForm(elem);
+        openInvEditForm(elem);
     }
 }
 
-function toggleListDeleteMode() {
+function toggleInvDeleteMode() {
     
-    itemDeleteFlag = !itemDeleteFlag;
-    if(itemDeleteFlag) {
+    itemInvDeleteFlag = !itemInvDeleteFlag;
+    if(itemInvDeleteFlag) {
         document.getElementById("invsearchsort").disabled = true;
         document.getElementById("invsortalpha").disabled = true;
         document.getElementById("invsortexp").disabled = true;
@@ -156,7 +156,7 @@ function toggleListDeleteMode() {
     }
 }
 
-function itemDeleteCancel() {
+function itemInvDeleteCancel() {
     document.getElementById("invsearchsort").disabled = false;
     document.getElementById("invsortalpha").disabled = false;
     document.getElementById("invsortexp").disabled = false;
@@ -167,7 +167,7 @@ function itemDeleteCancel() {
     document.getElementById("invitemdeletetoggle").style.background = "green";
     document.getElementById("invitemadd").style.display = "block";
     document.getElementById("invdeletecancel").style.display = "none";
-    itemDeleteFlag = false;
+    itemInvDeleteFlag = false;
     
 }
 
@@ -223,7 +223,7 @@ function addListItemFormSubmit() {
 
 // open the add and edit an item forms
 
-function openListAddForm() {
+function openInvAddForm() {
     document.getElementById("invaddform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 
@@ -247,7 +247,7 @@ var openItem = null;
 var openElem = null;
 
 // open the edit an item form on click the item
-function openListEditForm(elem) {
+function openInvEditForm(elem) {
     // set the form visible and overlay
     document.getElementById("inveditform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
@@ -326,7 +326,7 @@ function editListItemFormSubmit() {
 
     closeListEditForm();
 
-    updateListDisplay();
+    updateInvDisplay();
 }
 catch (e) {
     console.log(e);
@@ -340,7 +340,7 @@ catch (e) {
 
 // SORT BUTTONS --------------------- //
 
-function sortListItemAlpha() {
+function sortInvItemAlpha() {
     kitchenItems.sort((a, b) => {
         var i = a.name.localeCompare(b.name);
         if (i == 0 && a.hasOwnProperty("expirationDate") && b.hasOwnProperty("expirationDate")) {
@@ -353,10 +353,10 @@ function sortListItemAlpha() {
             return i;
         }
     });
-    updateListDisplay();
+    updateInvDisplay();
 }
 
-function sortListItemExp() {
+function sortInvItemExp() {
     kitchenItems.sort((a, b) => {
         
         if (a.hasOwnProperty("expirationDate") && !b.hasOwnProperty("expirationDate")) {
@@ -376,7 +376,7 @@ function sortListItemExp() {
             return a.name.localeCompare(b.name);
         }
     });
-    updateListDisplay();
+    updateInvDisplay();
 }
 
 // search and levenshtein distance
@@ -402,7 +402,7 @@ function levenshtein(a, b) {
   return dp[a.length][b.length];
 }
 
-function searchListItems() {
+function searchInvItems() {
     console.log("pressed");
 
     const query = document.getElementById("invsearch").value.trim();
@@ -413,5 +413,5 @@ function searchListItems() {
 
     kitchenItems.sort((a, b) => a.dist - b.dist);
 
-    updateListDisplay();
+    updateInvDisplay();
 }
