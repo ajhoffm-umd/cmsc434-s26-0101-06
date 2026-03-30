@@ -87,20 +87,20 @@
 
             <!--- live update grocery list here -->
             <div id="grocerylist" class="tabcontent">
-                
-                <h1>Grocery List</h1>
 
                 <div class="grocerycontainer">
 
+                    <h1>Grocery List</h1>
+
                     <div class="listheader">
 
-                        <button id="groceryitemadd" class="itemadd" onclick="openListAddForm()">add</button>
+                        <button id="groceryitemadd" class="itemadd" onclick="openGroceryAddForm()">add</button>
 
                     </div>
 
                     <div class="listarea">
 
-                        <ul id="grocerylist" class="grocerylist">
+                        <ul id="grocery" class="grocerylist">
                             <li class="header-row-grocery">
                                 <span>Name</span>
                                 <span>Quantity</span>
@@ -179,6 +179,29 @@
 
                     <button type="submit">Submit</button>
                     <button type="button" onclick="closeListEditForm()">Close</button>
+                </form>
+            </div>
+
+            <!-- Grocery List Add Form -->
+            <div id="groceryaddform" class="form-popup">
+                <form class="form-container" onsubmit="return addGroceryItemFormSubmit()">
+                    <h2>New Item</h2>
+
+                    <label for="grocerynewname"><b>Name</b></label>
+                    <p id="groceryformnamewarning" class="formwarning">An Item with this name already exists!</p>
+                    <input type="text" id="grocerynewname" placeholder="Enter item name..." required>
+
+                    <label for="grocerynewdrop"><b>Location</b></label>
+                    <select id="grocerynewdrop" required></select>
+
+                    <label for="grocerynewquantity"><b>Quantity</b></label>
+                    <input type="text" id="grocerynewquantity" placeholder="Enter item quantity...">
+
+                    <label for="grocerynewdate"><b>Expiration Date</b></label>
+                    <input type="date" id="grocerynewdate">
+
+                    <button type="submit">Submit</button>
+                    <button type="button" onclick="closeGroceryAddForm()">Close</button>
                 </form>
             </div>
 

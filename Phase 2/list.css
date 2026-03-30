@@ -19,6 +19,20 @@
 
 }
 
+.grocery {
+    height: 200px;
+    width: inherit; 
+
+    
+    background-color: var(--bg-main);
+    border-style: solid;
+}
+
+.strikethrough {
+    background-color: gray;
+    text-decoration: line-through;
+}
+
 .item-row-grocery {
   display: grid;
   grid-template-columns: 4fr 2fr 2fr 1fr; 
