@@ -1,0 +1,26 @@
+.memberscontainer {
+    height: 98%;
+    width: inherit; 
+
+    background-color: var(--bg-main);
+    border-style: var(--wire);
+}
+
+.member-row {
+    grid-template-columns: 2fr 1fr auto;
+    cursor: pointer;
+    align-items: center;
+}
+
+.remove-btn {
+    padding: 4px 8px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background-color: darkred;
+}

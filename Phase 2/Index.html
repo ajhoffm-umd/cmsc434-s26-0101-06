@@ -32,6 +32,7 @@
 
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="pantry.css">
+<link rel="stylesheet" href="members.css">
 
 </head>
     <body>
@@ -100,7 +101,23 @@
 
             <!-- members tab here -->
             <div id="members" class="tabcontent">
-                <p>members</p>
+                <div class="memberscontainer">
+                    <h1>Members</h1>
+
+                    <div class="listheader">
+                        <h2>Household Members</h2>
+                        <button onclick="openMemberAddPopup()">Add Members</button>
+                    </div>
+
+                    <div class="listarea">
+                        <ul id="memberlist" class="pantrylist">
+                            <li class="header-row member-header-row">
+                                <span>Name</span>
+                                <span>Role</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- navbar here -->
@@ -163,7 +180,16 @@
 
         </div>
 
-        
+        <div id="memberaddpopup" class="form-popup">
+            <div class="form-container">
+                <h2>Add Members</h2>
+                <label for="memberlink"><b>Invite Link</b></label>
+                <input type="text" id="memberlink" value="https://kitchen-kompanion/invite/james_family" readonly>
+                <button type="button" onclick="copyMemberLink()">Copy Link</button>
+                <button type="button" onclick="closeMemberAddPopup()">Close</button>
+                <p id="copymsg" style="display:none; font-size:14px; margin-top:10px;">Link copied!</p>
+            </div>
+        </div>
 
 
         <script>
@@ -212,6 +238,7 @@
 
         
         <script src="pantry.js"></script>
+        <script src="members.js"></script>
 
     </body>
 </html>
