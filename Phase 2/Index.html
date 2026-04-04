@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="pantry.css">
 <link rel="stylesheet" href="list.css">
+<link rel="stylesheet" href="recipe.css">
 
 </head>
     <body>
@@ -118,7 +119,20 @@
 
             <!-- recipes tab here -->
             <div id="recipes" class="tabcontent">
-                <p>recipe</p>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" placeholder="Search your recipes..." />
+                </div>
+
+                <!-- Section Title -->
+                <h2 class="section-title">Your Recipes</h2>
+
+                <!-- Recipe List -->
+                <div id="recipeList" class="recipe-list"></div>
+
+                <!-- TODO: need to add .js code to add recipe to local storage -->
+                <button class="add-btn" onclick="addRecipePrompt()">+</button>
             </div>
 
             <!-- members tab here -->
@@ -235,6 +249,7 @@
 
         
         <script src="pantry.js"></script>
+        <script src="recipes.js"></script>
 
     </body>
 </html>
