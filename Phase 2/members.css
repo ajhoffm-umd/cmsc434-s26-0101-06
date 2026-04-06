@@ -1,0 +1,362 @@
+.members-household {
+    padding: 20px 22px;
+    margin-top: 8px;
+    margin-bottom: 22px;
+}
+
+.members-household-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.members-household-title {
+    margin: 0;
+    font: var(--text-h2);
+    color: #000000;
+}
+
+.members-household-type {
+    margin: 8px 0 0 0;
+    font: var(--text-paragraph);
+    color: #000000;
+}
+
+.members-edit-btn {
+    border: none;
+    background: var(--green);
+    color: var(--white);
+    font: 600 18px / 1.2 var(--font-family-main);
+    padding: 10px 30px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(13, 99, 27, 0.28);
+}
+
+
+.members-section-title {
+    margin: 0 0 12px 0;
+    font: var(--text-h2);
+    color: #000000;
+    letter-spacing: -0.02em;
+    padding-bottom: 1em;
+}
+
+.members-table-head {
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 0 16px 10px 16px;
+    font: 600 16px / 1 var(--font-family-main);
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    box-sizing: border-box;
+}
+
+.members-table-head .members-head-name {
+    text-align: left;
+}
+
+.members-table-head .members-head-role {
+    text-align: right;
+    padding-right: 4px;
+}
+
+.members-table-head .members-actions-head {
+    text-align: right;
+    min-width: 0;
+}
+
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.member-card {
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr auto;
+    gap: 14px;
+    align-items: center;
+    background: var(--white);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+}
+
+.member-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background:  green;
+    color: #ffffff;
+    font: 700 18px / 48px var(--font-family-main);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.member-name {
+    font: var(--text-h3);
+    font-size: 22px;
+    color: var(--black);
+    min-width: 0;
+}
+
+.member-role {
+    font: var(--text-paragraph);
+    font-size: 18px;
+    color: var(--grey);
+    text-align: right;
+    padding-right: 4px;
+}
+
+.member-request-btn {
+    border: 2px solid var(--green);
+    background: rgba(13, 99, 27, 0.06);
+    color: var(--green);
+    font: 600 15px / 1.2 var(--font-family-main);
+    padding: 10px 14px;
+    border-radius: 12px;
+    gap: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.member-request-btn:hover {
+    background: var(--green);
+    color: var(--white);
+}
+
+.member-request-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Food request modal (reuses .edit-popup base) — black text to match household popup */
+#memberfoodrequestform .edit-label-main {
+    color: var(--black);
+}
+
+#memberfoodrequestform .member-request-context {
+    font: var(--text-paragraph);
+    font-size: 18px;
+    color: var(--black);
+    margin: -8px 0 16px 0;
+}
+
+#memberfoodrequestform .member-request-context strong {
+    color: var(--black);
+}
+
+#memberrequestwarning {
+    margin-bottom: 8px;
+}
+
+#memberfoodrequestform .edit-sm-input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    padding: 14px 18px;
+    border-radius: 9999px;
+    border: none;
+    background: #eef0f1;
+    font-size: 18px;
+    outline: none;
+    color: var(--black);
+}
+
+#memberfoodrequestform .edit-sm-input::placeholder {
+    color: var(--black);
+    opacity: 0.45;
+}
+
+#memberfoodrequestform .edit-submit-btn {
+    margin-top: 22px;
+}
+
+/* Household edit popup — black labels, gray inputs */
+#householdeditform .edit-label-upper {
+    color: var(--black);
+}
+
+#householdeditform .household-edit-section-label {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+#householdeditform #householdeditname {
+    background: #eef0f1;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 20px;
+    color: var(--black);
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+#householdeditform #householdeditname::placeholder {
+    color: var(--black);
+    opacity: 0.45;
+}
+
+#householdeditform .edit-divider {
+    margin-top: 8px;
+    margin-bottom: 22px;
+}
+
+#householdeditform .household-edit-type-select {
+    margin-bottom: 24px;
+    width: 100%;
+    font-size: 20px;
+    color: var(--black);
+}
+
+.household-edit-members-block {
+    margin-bottom: 20px;
+}
+
+.household-edit-members-head {
+    display: grid;
+    grid-template-columns: 1fr minmax(140px, 180px) 44px;
+    gap: 14px;
+    align-items: center;
+    padding: 0 0 14px 0;
+    font: 700 18px / 1.2 var(--font-family-main);
+    color: var(--black);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Match visible text start with inputs: name field padding 18px, role select 16px */
+.household-edit-members-head .household-edit-head-name {
+    padding-left: 18px;
+    text-align: left;
+}
+
+.household-edit-members-head .household-edit-head-role {
+    padding-left: 16px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.household-edit-member-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.household-edit-member-row {
+    display: grid;
+    grid-template-columns: 1fr minmax(140px, 180px) 44px;
+    gap: 14px;
+    align-items: center;
+    justify-items: stretch;
+}
+
+#householdeditform .household-edit-name-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 9999px;
+    background: #eef0f1;
+    color: var(--black);
+    font-size: 20px;
+    font-family: var(--font-family-main);
+    outline: none;
+}
+
+#householdeditform .household-edit-name-input::placeholder {
+    color: var(--black);
+    opacity: 0.45;
+}
+
+#householdeditform .household-edit-role-select {
+    width: 100%;
+    margin: 0;
+    padding: 14px 36px 14px 16px;
+    border-radius: 14px;
+    font-size: 20px;
+    color: var(--black);
+    background: #eef0f1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
+    cursor: pointer;
+}
+
+.household-edit-delete-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.household-edit-delete-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.household-edit-delete-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+.household-edit-delete-btn svg {
+    display: block;
+}
+
+/* Match .member-request-btn on member cards */
+.household-edit-add-member {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    background: rgba(13, 99, 27, 0.06);
+    color: var(--green);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--font-family-main);
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.household-edit-add-member:hover {
+    background: var(--green);
+    color: var(--white);
+}
+
+.household-edit-add-member-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(13, 99, 27, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--green);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.household-edit-add-member:hover .household-edit-add-member-icon {
+    background: rgba(255, 255, 255, 0.22);
+    color: var(--white);
+}
+
+#householdeditform .household-edit-save-btn {
+    margin-top: 0;
+}

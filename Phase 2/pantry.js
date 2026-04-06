@@ -52,7 +52,7 @@ let kitchenItems = [
     location: "Fridge",
     quantity: "1 LITER",
     expirationDate: "2026-04-06",
-    members: ["Bob", "Alice"],
+    members: ["Emily", "Sally"],
     image: "images/almond-milk.png"
   },
   {
@@ -60,7 +60,7 @@ let kitchenItems = [
     location: "Fridge",
     quantity: "500 ML",
     expirationDate: "2026-04-08",
-    members: ["Clara"],
+    members: ["Sarah"],
     image: "images/greek-yogurt.png"
   },
   {
@@ -68,14 +68,14 @@ let kitchenItems = [
     location: "Fridge",
     quantity: "250 GRAMS",
     expirationDate: "2026-04-12",
-    members: ["David"],
+    members: ["Mary"],
     image: "images/cheddar-cheese.png"
   },
   {
     name: "Rice",
     location: "Pantry",
     quantity: "2 bags",
-    members: ["Bob", "Alice"]
+    members: ["Emily", "Sally"]
   }
 ];
 
@@ -354,7 +354,7 @@ function renderAddMembers() {
     const container = document.getElementById("invaddmembers");
     container.innerHTML = "";
 
-    householdMembers.forEach(member => {
+    getHouseholdMemberNames().forEach(member => {
         const div = document.createElement("div");
         div.classList.add("edit-member");
 
@@ -391,7 +391,312 @@ function closeListAddForm() {
 var openItem = null;
 var openElem = null;
 
-const householdMembers = ["Alice", "Bob", "Clara", "David"];
+const householdMemberProfiles = [
+    { name: "Emily", role: "Roommate", isCreator: true },
+    { name: "Sally", role: "Roommate", isCreator: false },
+    { name: "Sarah", role: "Roommate", isCreator: false },
+    { name: "Mary", role: "Roommate", isCreator: false }
+];
+
+function getHouseholdMemberNames() {
+    return householdMemberProfiles.map(m => m.name);
+}
+
+const householdInfo = {
+    name: "Calvert Hall 1406",
+    type: "Roommates"
+};
+
+let memberFoodRequestTarget = "";
+
+/** Working copy while #householdeditform is open */
+let householdEditDraft = null;
+
+const HOUSEHOLD_EDIT_ROLES = ["Adult", "Roommate", "Child"];
+
+function memberInitials(name) {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.trim().slice(0, 2).toUpperCase() || "?";
+}
+
+function openHouseholdEdit() {
+    householdEditDraft = householdMemberProfiles.map(p => ({
+        name: p.name,
+        role: p.role,
+        isCreator: !!p.isCreator
+    }));
+
+    document.getElementById("householdeditname").value = householdInfo.name;
+    const typeSel = document.getElementById("householdedittype");
+    if (typeSel) {
+        const types = Array.from(typeSel.options).map(o => o.value);
+        typeSel.value = types.includes(householdInfo.type) ? householdInfo.type : typeSel.options[0].value;
+    }
+
+    renderHouseholdEditMemberRows();
+
+    document.getElementById("householdeditform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+}
+
+function closeHouseholdEdit() {
+    const form = document.getElementById("householdeditform");
+    if (form) form.style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+    householdEditDraft = null;
+}
+
+function syncHouseholdEditDraftFromDom() {
+    if (!householdEditDraft) return;
+    const rows = document.querySelectorAll("#householdeditmemberrows .household-edit-member-row");
+    householdEditDraft = [];
+    rows.forEach(row => {
+        householdEditDraft.push({
+            name: row.querySelector(".household-edit-name-input").value,
+            role: row.querySelector(".household-edit-role-select").value,
+            isCreator: row.dataset.isCreator === "1"
+        });
+    });
+}
+
+function renderHouseholdEditMemberRows() {
+    const container = document.getElementById("householdeditmemberrows");
+    if (!container || !householdEditDraft) return;
+
+    container.innerHTML = "";
+    const trashSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="none" width="26" height="26" aria-hidden="true">
+    <path d="M3.625 7.25002H6.04167M6.04167 7.25002H25.375M6.04167 7.25002L6.04167 24.1667C6.04167 24.8076 6.29628 25.4223 6.74949 25.8755C7.20271 26.3287 7.81739 26.5834 8.45833 26.5834H20.5417C21.1826 26.5834 21.7973 26.3287 22.2505 25.8755C22.7037 25.4223 22.9583 24.8076 22.9583 24.1667V7.25002M9.66667 7.25002V4.83335C9.66667 4.19241 9.92128 3.57773 10.3745 3.12451C10.8277 2.6713 11.4424 2.41669 12.0833 2.41669H16.9167C17.5576 2.41669 18.1723 2.6713 18.6255 3.12451C19.0787 3.57773 19.3333 4.19241 19.3333 4.83335V7.25002"
+        stroke="#1E1E1E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+
+    householdEditDraft.forEach((p, idx) => {
+        const row = document.createElement("div");
+        row.className = "household-edit-member-row";
+        row.dataset.isCreator = p.isCreator ? "1" : "0";
+
+        const nameIn = document.createElement("input");
+        nameIn.type = "text";
+        nameIn.className = "household-edit-name-input";
+        nameIn.placeholder = "Name";
+        nameIn.value = p.name;
+        nameIn.autocomplete = "off";
+
+        const sel = document.createElement("select");
+        sel.className = "household-edit-role-select edit-sm-select";
+        HOUSEHOLD_EDIT_ROLES.forEach(r => {
+            const o = document.createElement("option");
+            o.value = r;
+            o.textContent = r;
+            sel.appendChild(o);
+        });
+        if (p.role && !HOUSEHOLD_EDIT_ROLES.includes(p.role)) {
+            const o = document.createElement("option");
+            o.value = p.role;
+            o.textContent = p.role;
+            sel.insertBefore(o, sel.firstChild);
+        }
+        sel.value = p.role;
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "household-edit-delete-btn";
+        del.setAttribute("aria-label", "Remove member");
+        del.innerHTML = trashSvg;
+        del.disabled = householdEditDraft.length <= 1;
+        del.onclick = function() {
+            removeHouseholdEditMemberRow(idx);
+        };
+
+        row.appendChild(nameIn);
+        row.appendChild(sel);
+        row.appendChild(del);
+        container.appendChild(row);
+    });
+}
+
+function removeHouseholdEditMemberRow(index) {
+    syncHouseholdEditDraftFromDom();
+    if (householdEditDraft.length <= 1) return;
+
+    const wasCreator = householdEditDraft[index].isCreator;
+    householdEditDraft.splice(index, 1);
+    if (wasCreator && householdEditDraft.length > 0) {
+        householdEditDraft[0].isCreator = true;
+    }
+
+    renderHouseholdEditMemberRows();
+}
+
+function addHouseholdEditMemberRow() {
+    syncHouseholdEditDraftFromDom();
+    householdEditDraft.push({ name: "", role: "Adult", isCreator: false });
+    renderHouseholdEditMemberRows();
+
+    const inputs = document.querySelectorAll("#householdeditmemberrows .household-edit-name-input");
+    if (inputs.length > 0) {
+        inputs[inputs.length - 1].focus();
+    }
+}
+
+function saveHouseholdEdit() {
+    syncHouseholdEditDraftFromDom();
+
+    const hn = document.getElementById("householdeditname").value.trim();
+    if (!hn) {
+        document.getElementById("householdeditname").focus();
+        return;
+    }
+
+    const trimmed = householdEditDraft
+        .map(p => ({
+            name: p.name.trim(),
+            role: p.role,
+            isCreator: p.isCreator
+        }))
+        .filter(p => p.name.length > 0);
+
+    if (trimmed.length === 0) {
+        window.alert("Add at least one household member with a name.");
+        return;
+    }
+
+    const lowerNames = trimmed.map(m => m.name.toLowerCase());
+    if (new Set(lowerNames).size !== lowerNames.length) {
+        window.alert("Each member needs a unique name.");
+        return;
+    }
+
+    let creatorIndex = trimmed.findIndex(m => m.isCreator);
+    if (creatorIndex < 0) {
+        creatorIndex = 0;
+    }
+    trimmed.forEach((m, i) => {
+        m.isCreator = i === creatorIndex;
+    });
+
+    householdInfo.name = hn;
+    const typeSel = document.getElementById("householdedittype");
+    if (typeSel) {
+        householdInfo.type = typeSel.value;
+    }
+
+    householdMemberProfiles.length = 0;
+    trimmed.forEach(m => {
+        householdMemberProfiles.push({
+            name: m.name,
+            role: m.role,
+            isCreator: m.isCreator
+        });
+    });
+
+    renderMembersPage();
+    closeHouseholdEdit();
+}
+
+function renderMembersPage() {
+    const nameEl = document.getElementById("household-display-name");
+    const typeEl = document.getElementById("household-display-type");
+    const listEl = document.getElementById("memberslist");
+    if (!nameEl || !typeEl || !listEl) return;
+
+    nameEl.textContent = householdInfo.name;
+    typeEl.textContent = householdInfo.type;
+
+    listEl.innerHTML = "";
+    householdMemberProfiles.forEach(profile => {
+        const card = document.createElement("article");
+        card.className = "member-card";
+
+        const avatar = document.createElement("div");
+        avatar.className = "member-avatar";
+        avatar.setAttribute("aria-hidden", "true");
+        avatar.textContent = memberInitials(profile.name);
+
+        const name = document.createElement("div");
+        name.className = "member-name";
+        name.textContent = profile.name;
+
+        const role = document.createElement("div");
+        role.className = "member-role";
+        role.textContent = profile.role + (profile.isCreator ? " (Creator)" : "");
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "member-request-btn";
+        btn.setAttribute("aria-label", `Request a food item for ${profile.name}`);
+        btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H19M9 21C9.55228 21 10 20.5523 10 20C10 19.4477 9.55228 19 9 19C8.44772 19 8 19.4477 8 20C8 20.5523 8.44772 21 9 21ZM19 21C19.5523 21 20 20.5523 20 20C20 19.4477 19.5523 19 19 19C18.4477 19 18 19.4477 18 20C18 20.5523 18.4477 19 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Request
+        `;
+        btn.onclick = function() {
+            openMemberFoodRequest(profile.name);
+        };
+
+        card.appendChild(avatar);
+        card.appendChild(name);
+        card.appendChild(role);
+        card.appendChild(btn);
+        listEl.appendChild(card);
+    });
+}
+
+function openMemberFoodRequest(memberName) {
+    memberFoodRequestTarget = memberName;
+    const ctx = document.getElementById("memberrequestcontext");
+    const input = document.getElementById("memberrequestitem");
+    const warn = document.getElementById("memberrequestwarning");
+    if (!ctx || !input) return;
+
+    ctx.textContent = "";
+    ctx.appendChild(document.createTextNode("Adding for "));
+    const strong = document.createElement("strong");
+    strong.textContent = memberName;
+    ctx.appendChild(strong);
+    ctx.appendChild(document.createTextNode(". This goes on the household grocery list."));
+
+    input.value = "";
+    if (warn) warn.style.display = "none";
+
+    document.getElementById("memberfoodrequestform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+    input.focus();
+}
+
+function closeMemberFoodRequest() {
+    document.getElementById("memberfoodrequestform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+    memberFoodRequestTarget = "";
+}
+
+function submitMemberFoodRequest() {
+    const name = document.getElementById("memberrequestitem").value.trim();
+    const warn = document.getElementById("memberrequestwarning");
+    if (!name) {
+        document.getElementById("memberrequestitem").focus();
+        return;
+    }
+
+    let duplicate = false;
+    groceryItems.forEach(item => {
+        if (item.name.toLowerCase() === name.toLowerCase()) duplicate = true;
+    });
+    if (duplicate) {
+        warn.style.display = "block";
+        return;
+    }
+    warn.style.display = "none";
+
+    const newItem = { name, requestedBy: memberFoodRequestTarget };
+    groceryItems.push(newItem);
+    updateGroceryDisplay();
+    closeMemberFoodRequest();
+}
 let selectedEditMembers = [];
 
 function openInvEditForm(elem) {
@@ -461,7 +766,7 @@ function renderEditMembers(currentMembers) {
     const container = document.getElementById("inveditmembers");
     container.innerHTML = "";
 
-    householdMembers.forEach(member => {
+    getHouseholdMemberNames().forEach(member => {
         const isSelected = selectedEditMembers.includes(member);
         const div = document.createElement("div");
         div.classList.add("edit-member");
@@ -675,9 +980,20 @@ function pushGroceryCard(item) {
         imageEl.classList.add("grocery-card-image-placeholder");
     }
 
+    const nameBlock = document.createElement("div");
+    nameBlock.classList.add("grocery-card-name-block");
+
     const name = document.createElement("div");
     name.classList.add("grocery-card-name");
     name.textContent = item.name;
+    nameBlock.appendChild(name);
+
+    if (item.requestedBy) {
+        const req = document.createElement("div");
+        req.classList.add("grocery-card-requested");
+        req.textContent = "Requested by " + item.requestedBy;
+        nameBlock.appendChild(req);
+    }
 
     const qty = document.createElement("div");
     qty.classList.add("grocery-card-qty");
@@ -698,7 +1014,7 @@ function pushGroceryCard(item) {
 
     card.appendChild(checkbox);
     card.appendChild(imageEl);
-    card.appendChild(name);
+    card.appendChild(nameBlock);
     card.appendChild(qty);
     card.appendChild(trash);
 
@@ -764,7 +1080,7 @@ function renderGroceryAddMembers() {
     const container = document.getElementById("groceryaddmembers");
     container.innerHTML = "";
 
-    householdMembers.forEach(member => {
+    getHouseholdMemberNames().forEach(member => {
         const div = document.createElement("div");
         div.classList.add("edit-member");
 
@@ -832,6 +1148,8 @@ function groceryAddFormSubmit() {
 }
 
 groceryItems.forEach(item => { pushGroceryCard(item) });
+
+renderMembersPage();
 
 
 // ===================== RECIPES ===================== //
@@ -1110,3 +1428,18 @@ function recipeEditFormSubmit() {
 }
 
 recipes.forEach(r => { pushRecipeCard(r) });
+
+/**
+ * Close every modal without persisting (used when switching bottom tabs).
+ */
+function closeAllPopupsDiscardUnsaved() {
+    closeListAddForm();
+    closeListEditForm();
+    closeGroceryAddForm();
+    closeRecipeAddForm();
+    closeRecipeEditForm();
+    closeHouseholdEdit();
+    closeMemberFoodRequest();
+    const overlay = document.getElementById("overlay");
+    if (overlay) overlay.style.display = "none";
+}

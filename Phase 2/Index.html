@@ -34,6 +34,7 @@
 <link rel="stylesheet" href="pantry.css">
 <link rel="stylesheet" href="list.css">
 <link rel="stylesheet" href="recipe.css">
+<link rel="stylesheet" href="members.css">
 
 </head>
     <body>
@@ -152,7 +153,33 @@
 
             <!-- members tab here -->
             <div id="members" class="tabcontent">
-                <p>members</p>
+                <div class="invcontainer members-container">
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
+
+                    <section class="members-household" aria-label="Household">
+                        <div class="members-household-top">
+                            <div>
+                                <h2 id="household-display-name" class="members-household-title"></h2>
+                                <p class="members-household-type">
+                                    <span class="label">Household Type:</span>
+                                    <span id="household-display-type"></span>
+                                </p>
+                            </div>
+                            <button type="button" class="members-edit-btn" onclick="openHouseholdEdit()">Edit</button>
+                        </div>
+                    </section>
+
+                    <section class="members-section" aria-labelledby="members-heading">
+                        <h3 id="members-heading" class="members-section-title">Members</h3>
+                        <div class="members-table-head">
+                            <span aria-hidden="true"></span>
+                            <span class="members-head-name">Name</span>
+                            <span class="members-head-role">Role</span>
+                            <span class="members-actions-head">Request</span>
+                        </div>
+                        <div id="memberslist" class="members-list"></div>
+                    </section>
+                </div>
             </div>
 
             <!-- navbar here -->
@@ -414,6 +441,53 @@
                 </form>
             </div>
 
+            <!-- Edit household (from Members tab) -->
+            <div id="householdeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit household</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeHouseholdEdit()">&times;</button>
+                </div>
+
+                <label class="edit-label-upper household-edit-section-label" for="householdeditname">HOUSEHOLD NAME</label>
+                <input type="text" id="householdeditname" class="edit-name-input" placeholder="e.g. The Smith's House" autocomplete="off">
+                <div class="edit-divider"></div>
+
+                <label class="edit-label-upper household-edit-section-label" for="householdedittype">HOUSEHOLD TYPE</label>
+                <select id="householdedittype" class="edit-sm-select household-edit-type-select">
+                    <option value="Roommates">Roommates</option>
+                    <option value="Family">Family</option>
+                    <option value="Solo">Solo</option>
+                </select>
+
+                <div class="household-edit-members-block">
+                    <div class="household-edit-members-head">
+                        <span class="household-edit-head-name">Name</span>
+                        <span class="household-edit-head-role">Role</span>
+                        <span class="household-edit-members-head-spacer" aria-hidden="true"></span>
+                    </div>
+                    <div id="householdeditmemberrows" class="household-edit-member-rows"></div>
+                </div>
+
+                <button type="button" class="household-edit-add-member" onclick="addHouseholdEditMemberRow()">
+                    <span class="household-edit-add-member-icon" aria-hidden="true">+</span>
+                    Add member
+                </button>
+                <button type="button" class="edit-submit-btn household-edit-save-btn" onclick="saveHouseholdEdit()">Save changes</button>
+            </div>
+
+            <!-- Request food (from Members tab) -->
+            <div id="memberfoodrequestform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Request a food item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeMemberFoodRequest()">&times;</button>
+                </div>
+                <p id="memberrequestcontext" class="member-request-context"></p>
+                <p id="memberrequestwarning" class="formwarning">That item is already on your grocery list.</p>
+                <label class="edit-label-main" for="memberrequestitem">What should we pick up?</label>
+                <input type="text" id="memberrequestitem" class="edit-sm-input" placeholder="e.g. Oat milk" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();submitMemberFoodRequest();}">
+                <button type="button" class="edit-submit-btn" onclick="submitMemberFoodRequest()">Add to grocery list</button>
+            </div>
+
             <div id="overlay" class="overlay"></div>
 
         </div>
@@ -431,6 +505,10 @@
             /* use a different file for anything else please */
 
             function openTab(tabName, elmnt) {
+                if (typeof closeAllPopupsDiscardUnsaved === "function") {
+                    closeAllPopupsDiscardUnsaved();
+                }
+
                 var i, tabcontent, tablinks;
 
                 // get all tabcontents
