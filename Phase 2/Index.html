@@ -172,6 +172,15 @@
                     <button type="button" class="edit-close-btn" onclick="closeListAddForm()">&times;</button>
                 </div>
                 <form onsubmit="return addListItemFormSubmit()">
+                    <div class="recipe-cover-upload" id="invaddcover" onclick="document.getElementById('invaddcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="invaddcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'invaddcover')">
+                    </div>
+
                     <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
                     <p id="invformnamewarning" class="formwarning">An Item with this name already exists!</p>
                     <input type="text" id="invnewname" class="edit-name-input" placeholder="What did you buy?" required autocomplete="off">
@@ -212,7 +221,7 @@
                     <label class="edit-label-upper">SHARED WITH</label>
                     <div class="edit-members" id="invaddmembers"></div>
 
-                    <button type="submit" class="edit-submit-btn">Add to Inventory &#8853;</button>
+                    <button type="submit" class="edit-submit-btn">Add to Inventory</button>
                 </form>
             </div>
 
@@ -223,6 +232,15 @@
                     <button type="button" class="edit-close-btn" onclick="closeListEditForm()">&times;</button>
                 </div>
                 <form onsubmit="return editListItemFormSubmit()">
+                    <div class="recipe-cover-upload" id="inveditcover" onclick="document.getElementById('inveditcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="inveditcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'inveditcover')">
+                    </div>
+
                     <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
                     <p id="invformnamewarningedit" class="formwarning">An Item with this name already exists!</p>
                     <input type="text" id="inveditname" class="edit-name-input" placeholder="Enter item name..." required autocomplete="off">
@@ -270,26 +288,35 @@
             <!-- Grocery List Add Form -->
             <div id="groceryaddform" class="form-popup edit-popup">
                 <div class="edit-header">
-                    <h2>Add Grocery Item</h2>
+                    <h2>Add New Item</h2>
                     <button type="button" class="edit-close-btn" onclick="closeGroceryAddForm()">&times;</button>
                 </div>
                 <form onsubmit="return groceryAddFormSubmit()">
+                    <div class="recipe-cover-upload" id="groceryaddcover" onclick="document.getElementById('groceryaddcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="groceryaddcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'groceryaddcover')">
+                    </div>
+
                     <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
                     <p id="groceryformnamewarning" class="formwarning">This item is already on your list!</p>
-                    <input type="text" id="grocerynewname" class="edit-name-input" placeholder="What do you need?" required autocomplete="off">
+                    <input type="text" id="grocerynewname" class="edit-name-input" placeholder="What do you want to buy" required autocomplete="off">
                     <div class="edit-divider"></div>
 
                     <div class="edit-row-3">
                         <div class="edit-col">
                             <label class="edit-label-upper">QUANTITY</label>
-                            <input type="number" id="grocerynewquantity" class="edit-sm-input" min="0" placeholder="Ex. 2">
+                            <input type="number" id="grocerynewquantity" class="edit-sm-input" min="0" placeholder="Ex. 1.2" step="any">
                         </div>
                         <div class="edit-col">
                             <label class="edit-label-upper">UNITS</label>
                             <select id="grocerynewunits" class="edit-sm-select">
                                 <option value="">--</option>
+                                <option value="Liters">Liters</option>
                                 <option value="Cups">Cups</option>
-                                <option value="Liter">Liter</option>
                                 <option value="ML">ML</option>
                                 <option value="Grams">Grams</option>
                                 <option value="Oz">Oz</option>
@@ -299,7 +326,18 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="edit-submit-btn">Add to List</button>
+                    <label class="edit-label-upper">STORAGE LOCATION</label>
+                    <div class="edit-pills" id="groceryaddpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="grocerynewlocation" value="Fridge">
+
+                    <label class="edit-label-upper">SHARED WITH</label>
+                    <div class="edit-members" id="groceryaddmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Add to Grocery List</button>
                 </form>
             </div>
 
@@ -337,6 +375,42 @@
                     <textarea id="recipenewinstructions" class="recipe-instructions-input" placeholder="eg. Flour" rows="4"></textarea>
 
                     <button type="submit" class="edit-submit-btn">Add Recipe</button>
+                </form>
+            </div>
+
+            <!-- Recipe Edit Form -->
+            <div id="recipeeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit Recipe</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeRecipeEditForm()">&times;</button>
+                </div>
+                <form onsubmit="return recipeEditFormSubmit()">
+                    <div class="recipe-cover-upload" id="recipeeditcover" onclick="document.getElementById('recipeeditcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="recipeeditcoverfile" accept="image/*" style="display:none" onchange="previewRecipeEditCover(this)">
+                    </div>
+
+                    <label class="edit-label-main">Recipe Name <span class="edit-required">*</span></label>
+                    <input type="text" id="recipeeditname" class="edit-name-input" placeholder="e.g. Cauliflower Stew" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <label class="edit-label-upper">PREP TIME (MINUTES)</label>
+                    <input type="number" id="recipeeditpreptime" class="edit-sm-input recipe-prep-input" min="0" placeholder="30">
+
+                    <div class="recipe-ingredients-header">
+                        <button type="button" class="recipe-add-ingredient-btn" onclick="addEditIngredientField()">+</button>
+                        <label class="edit-label-upper" style="margin-bottom:0">INGREDIENTS</label>
+                    </div>
+                    <div id="recipeeditingredientslist" class="recipe-ingredients-list"></div>
+
+                    <label class="edit-label-upper">INSTRUCTIONS</label>
+                    <textarea id="recipeeditinstructions" class="recipe-instructions-input" placeholder="eg. Flour" rows="4"></textarea>
+
+                    <button type="submit" class="edit-submit-btn">Save Changes</button>
                 </form>
             </div>
 

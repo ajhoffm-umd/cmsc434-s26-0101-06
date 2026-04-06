@@ -1,6 +1,35 @@
 
 
 
+// shared cover image preview helper
+function previewCover(fileInput, containerId) {
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const upload = document.getElementById(containerId);
+            const existing = upload.querySelector("img");
+            if (existing) existing.remove();
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            upload.appendChild(img);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+function clearCoverUpload(containerId) {
+    const upload = document.getElementById(containerId);
+    const existing = upload.querySelector("img");
+    if (existing) existing.remove();
+    const fileInput = upload.querySelector("input[type=file]");
+    if (fileInput) fileInput.value = "";
+}
+
+function getCoverImageSrc(containerId) {
+    const img = document.getElementById(containerId).querySelector("img");
+    return img ? img.src : null;
+}
+
 // sets default for the showing dropdown in pantry
 
 const defaultKitchenLocations = ["Pantry", "Fridge", "Freezer"];
@@ -285,6 +314,9 @@ function addListItemFormSubmit() {
         newItem.members = [...selectedAddMembers];
     }
 
+    const coverSrc = getCoverImageSrc("invaddcover");
+    if (coverSrc) newItem.image = coverSrc;
+
     kitchenItems.push(newItem);
     pushElemListAdd(newItem);
     closeListAddForm();
@@ -303,6 +335,7 @@ function openInvAddForm() {
     document.getElementById("invnewunits").value = "";
     document.getElementById("invnewdate").value = "";
     document.getElementById("invnewdrop").value = "Fridge";
+    clearCoverUpload("invaddcover");
 
     document.querySelectorAll("#invaddpills .edit-pill").forEach(p => {
         p.classList.toggle("active-pill", p.dataset.loc === "Fridge");
@@ -411,6 +444,15 @@ function openInvEditForm(elem) {
         };
     });
 
+    // cover image
+    clearCoverUpload("inveditcover");
+    if (openItem.image) {
+        const upload = document.getElementById("inveditcover");
+        const img = document.createElement("img");
+        img.src = openItem.image;
+        upload.appendChild(img);
+    }
+
     renderEditMembers(openItem.members);
 }
 
@@ -481,6 +523,9 @@ function editListItemFormSubmit() {
         if (selectedEditMembers.length > 0) {
             newItem.members = [...selectedEditMembers];
         }
+
+        const coverSrc = getCoverImageSrc("inveditcover");
+        if (coverSrc) newItem.image = coverSrc;
 
         kitchenItems.push(newItem);
         pushElemListAdd(newItem);
@@ -673,9 +718,12 @@ function addCheckedToInventory() {
     toMove.forEach(item => {
         const newInvItem = {
             name: item.name,
-            location: "Pantry"
+            location: item.location || "Pantry"
         };
         if (item.quantity) newInvItem.quantity = item.quantity;
+        if (item.expirationDate) newInvItem.expirationDate = item.expirationDate;
+        if (item.members) newInvItem.members = [...item.members];
+        if (item.image) newInvItem.image = item.image;
         kitchenItems.push(newInvItem);
     });
 
@@ -687,12 +735,61 @@ function addCheckedToInventory() {
 
 // grocery add form
 
+let selectedGroceryAddMembers = [];
+
 function openGroceryAddForm() {
     document.getElementById("groceryaddform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
+
     document.getElementById("grocerynewname").value = "";
     document.getElementById("grocerynewquantity").value = "";
     document.getElementById("grocerynewunits").value = "";
+    document.getElementById("grocerynewlocation").value = "Fridge";
+    clearCoverUpload("groceryaddcover");
+
+    document.querySelectorAll("#groceryaddpills .edit-pill").forEach(p => {
+        p.classList.toggle("active-pill", p.dataset.loc === "Fridge");
+        p.onclick = function() {
+            document.getElementById("grocerynewlocation").value = this.dataset.loc;
+            document.querySelectorAll("#groceryaddpills .edit-pill").forEach(b => b.classList.remove("active-pill"));
+            this.classList.add("active-pill");
+        };
+    });
+
+    renderGroceryAddMembers();
+}
+
+function renderGroceryAddMembers() {
+    selectedGroceryAddMembers = [];
+    const container = document.getElementById("groceryaddmembers");
+    container.innerHTML = "";
+
+    householdMembers.forEach(member => {
+        const div = document.createElement("div");
+        div.classList.add("edit-member");
+
+        div.innerHTML = `
+            <div class="edit-member-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 30 30" fill="none">
+                    <path d="M11.25 17.1875C8.325 17.1875 2.5 18.65 2.5 21.5625V23.75H20V21.5625C20 18.65 14.175 17.1875 11.25 17.1875ZM5.425 21.25C6.475 20.525 9.0125 19.6875 11.25 19.6875C13.4875 19.6875 16.025 20.525 17.075 21.25H5.425ZM11.25 15C13.6625 15 15.625 13.0375 15.625 10.625C15.625 8.2125 13.6625 6.25 11.25 6.25C8.8375 6.25 6.875 8.2125 6.875 10.625C6.875 13.0375 8.8375 15 11.25 15ZM11.25 8.75C12.2875 8.75 13.125 9.5875 13.125 10.625C13.125 11.6625 12.2875 12.5 11.25 12.5C10.2125 12.5 9.375 11.6625 9.375 10.625C9.375 9.5875 10.2125 8.75 11.25 8.75Z" fill="#666"/>
+                </svg>
+            </div>
+            <span class="edit-member-name">${member}</span>
+        `;
+
+        div.onclick = function() {
+            const idx = selectedGroceryAddMembers.indexOf(member);
+            if (idx >= 0) {
+                selectedGroceryAddMembers.splice(idx, 1);
+                div.classList.remove("selected");
+            } else {
+                selectedGroceryAddMembers.push(member);
+                div.classList.add("selected");
+            }
+        };
+
+        container.appendChild(div);
+    });
 }
 
 function closeGroceryAddForm() {
@@ -705,6 +802,7 @@ function groceryAddFormSubmit() {
     const name = document.getElementById("grocerynewname").value.trim();
     const qtyVal = document.getElementById("grocerynewquantity").value.trim();
     const unitsVal = document.getElementById("grocerynewunits").value.trim();
+    const location = document.getElementById("grocerynewlocation").value.trim();
 
     let nameflag = false;
     groceryItems.forEach(item => {
@@ -719,6 +817,13 @@ function groceryAddFormSubmit() {
     if (qtyVal !== "") {
         newItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
     }
+    if (location) newItem.location = location;
+    if (selectedGroceryAddMembers.length > 0) {
+        newItem.members = [...selectedGroceryAddMembers];
+    }
+
+    const coverSrc = getCoverImageSrc("groceryaddcover");
+    if (coverSrc) newItem.image = coverSrc;
 
     groceryItems.push(newItem);
     updateGroceryDisplay();
@@ -793,6 +898,10 @@ function pushRecipeCard(recipe) {
     card.appendChild(imageEl);
     card.appendChild(name);
     card.appendChild(trash);
+
+    card.onclick = function() {
+        openRecipeEditForm(recipe);
+    };
 
     document.getElementById("recipeitems").appendChild(card);
 }
@@ -889,6 +998,114 @@ function recipeAddFormSubmit() {
     recipes.push(newRecipe);
     updateRecipeDisplay();
     closeRecipeAddForm();
+    return false;
+}
+
+// recipe edit form
+
+var openRecipe = null;
+
+function openRecipeEditForm(recipe) {
+    openRecipe = recipe;
+    document.getElementById("recipeeditform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+
+    document.getElementById("recipeeditname").value = recipe.name;
+    document.getElementById("recipeeditpreptime").value = recipe.prepTime || "";
+    document.getElementById("recipeeditinstructions").value = recipe.instructions || "";
+
+    // cover image
+    const coverUpload = document.getElementById("recipeeditcover");
+    const existingImg = coverUpload.querySelector("img");
+    if (existingImg) existingImg.remove();
+    if (recipe.coverImage) {
+        const img = document.createElement("img");
+        img.src = recipe.coverImage;
+        coverUpload.appendChild(img);
+    }
+
+    // ingredients
+    const list = document.getElementById("recipeeditingredientslist");
+    list.innerHTML = "";
+    if (recipe.ingredients && recipe.ingredients.length > 0) {
+        recipe.ingredients.forEach(ing => addEditIngredientField(ing));
+    } else {
+        addEditIngredientField();
+    }
+}
+
+function closeRecipeEditForm() {
+    openRecipe = null;
+    document.getElementById("recipeeditform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+
+function addEditIngredientField(value) {
+    const list = document.getElementById("recipeeditingredientslist");
+    const row = document.createElement("div");
+    row.classList.add("recipe-ingredient-row");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "e.g. 3 Tomatoes";
+    if (value) input.value = value;
+
+    const trash = document.createElement("button");
+    trash.type = "button";
+    trash.classList.add("recipe-ingredient-trash");
+    trash.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="none">
+    <path d="M3.625 7.25002H6.04167M6.04167 7.25002H25.375M6.04167 7.25002L6.04167 24.1667C6.04167 24.8076 6.29628 25.4223 6.74949 25.8755C7.20271 26.3287 7.81739 26.5834 8.45833 26.5834H20.5417C21.1826 26.5834 21.7973 26.3287 22.2505 25.8755C22.7037 25.4223 22.9583 24.8076 22.9583 24.1667V7.25002M9.66667 7.25002V4.83335C9.66667 4.19241 9.92128 3.57773 10.3745 3.12451C10.8277 2.6713 11.4424 2.41669 12.0833 2.41669H16.9167C17.5576 2.41669 18.1723 2.6713 18.6255 3.12451C19.0787 3.57773 19.3333 4.19241 19.3333 4.83335V7.25002"
+        stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `;
+    trash.onclick = function() { row.remove(); };
+
+    row.appendChild(input);
+    row.appendChild(trash);
+    list.appendChild(row);
+}
+
+function previewRecipeEditCover(fileInput) {
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const upload = document.getElementById("recipeeditcover");
+            const existing = upload.querySelector("img");
+            if (existing) existing.remove();
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            upload.appendChild(img);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+function recipeEditFormSubmit() {
+    const name = document.getElementById("recipeeditname").value.trim();
+    const prepTime = document.getElementById("recipeeditpreptime").value.trim();
+    const instructions = document.getElementById("recipeeditinstructions").value.trim();
+
+    // remove old recipe
+    recipes = recipes.filter(r => r.name !== openRecipe.name);
+
+    const ingredients = [];
+    document.querySelectorAll("#recipeeditingredientslist .recipe-ingredient-row input").forEach(input => {
+        const val = input.value.trim();
+        if (val) ingredients.push(val);
+    });
+
+    const updatedRecipe = { name };
+    if (prepTime) updatedRecipe.prepTime = parseInt(prepTime);
+    if (ingredients.length > 0) updatedRecipe.ingredients = ingredients;
+    if (instructions) updatedRecipe.instructions = instructions;
+
+    const coverImg = document.getElementById("recipeeditcover").querySelector("img");
+    if (coverImg) updatedRecipe.coverImage = coverImg.src;
+
+    recipes.push(updatedRecipe);
+    updateRecipeDisplay();
+    closeRecipeEditForm();
     return false;
 }
 
