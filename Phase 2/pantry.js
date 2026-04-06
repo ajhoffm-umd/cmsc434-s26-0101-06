@@ -53,7 +53,7 @@ let kitchenItems = [
     quantity: "1 LITER",
     expirationDate: "2026-04-06",
     members: ["Emily", "Sally"],
-    image: "images/almond-milk.png"
+    image: "photos/default_photo.jpg"
   },
   {
     name: "Greek Yogurt",
@@ -61,7 +61,7 @@ let kitchenItems = [
     quantity: "500 ML",
     expirationDate: "2026-04-08",
     members: ["Sarah"],
-    image: "images/greek-yogurt.png"
+    image: "photos/default_photo.jpg"
   },
   {
     name: "Cheddar Cheese",
@@ -69,7 +69,7 @@ let kitchenItems = [
     quantity: "250 GRAMS",
     expirationDate: "2026-04-12",
     members: ["Mary"],
-    image: "images/cheddar-cheese.png"
+    image: "photos/default_photo.jpg"
   },
   {
     name: "Rice",
@@ -164,8 +164,9 @@ function pushElemListAdd(item) {
         imageEl.src = item.image;
         imageEl.alt = item.name;
     } else {
-        imageEl = document.createElement("div");
-        imageEl.textContent = "🥫";
+        imageEl = document.createElement("img");
+        imageEl.src = "photos/default_photo.jpg";
+        imageEl.alt = item.name;
     }
     imageEl.classList.add("inventory-card-image");
 
@@ -922,8 +923,8 @@ function setInventoryFilter(location, buttonElem) {
 // ===================== GROCERY LIST ===================== //
 
 let groceryItems = [
-    { name: "Whole Milk", quantity: "1 LITER" },
-    { name: "Cauliflower", quantity: "1 LITER" },
+    { name: "Whole Milk", quantity: "1 LITER", members: ["Emily", "Sally"] },
+    { name: "Cauliflower", quantity: "1 LITER", members: ["Emily"] },
     { name: "Eggs", quantity: "1 LITER" }
 ];
 
@@ -976,8 +977,10 @@ function pushGroceryCard(item) {
         imageEl.alt = item.name;
         imageEl.classList.add("grocery-card-image");
     } else {
-        imageEl = document.createElement("div");
-        imageEl.classList.add("grocery-card-image-placeholder");
+        imageEl = document.createElement("img");
+        imageEl.src = "photos/default_photo.jpg";
+        imageEl.alt = item.name;
+        imageEl.classList.add("grocery-card-image");
     }
 
     const nameBlock = document.createElement("div");
@@ -993,6 +996,13 @@ function pushGroceryCard(item) {
         req.classList.add("grocery-card-requested");
         req.textContent = "Requested by " + item.requestedBy;
         nameBlock.appendChild(req);
+    }
+
+    if (item.members && item.members.length > 0) {
+        const shared = document.createElement("div");
+        shared.classList.add("grocery-card-shared");
+        shared.textContent = "Shared with " + item.members.join(", ");
+        nameBlock.appendChild(shared);
     }
 
     const qty = document.createElement("div");
@@ -1012,11 +1022,24 @@ function pushGroceryCard(item) {
         deleteGroceryItem(item.name);
     };
 
-    card.appendChild(checkbox);
-    card.appendChild(imageEl);
-    card.appendChild(nameBlock);
-    card.appendChild(qty);
+    const left = document.createElement("div");
+    left.classList.add("grocery-card-left");
+    left.appendChild(checkbox);
+    left.appendChild(imageEl);
+    left.appendChild(nameBlock);
+
+    const right = document.createElement("div");
+    right.classList.add("grocery-card-right");
+    right.appendChild(qty);
+
+    card.appendChild(left);
+    card.appendChild(right);
     card.appendChild(trash);
+
+    card.onclick = function(e) {
+        if (e.target === checkbox || e.target === trash || trash.contains(e.target)) return;
+        openGroceryEditForm(item);
+    };
 
     document.getElementById("groceryitems").appendChild(card);
 }
@@ -1148,6 +1171,124 @@ function groceryAddFormSubmit() {
 }
 
 groceryItems.forEach(item => { pushGroceryCard(item) });
+
+// ===================== GROCERY EDIT FORM ===================== //
+
+let openGroceryItem = null;
+let selectedGroceryEditMembers = [];
+
+function openGroceryEditForm(item) {
+    openGroceryItem = item;
+
+    document.getElementById("groceryeditform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+
+    document.getElementById("groceryeditname").value = item.name;
+
+    const qtyParts = (item.quantity || "").split(" ");
+    document.getElementById("groceryeditquantity").value = qtyParts[0] || "";
+    document.getElementById("groceryeditunits").value = qtyParts.slice(1).join(" ") || "";
+
+    const loc = item.location || "Fridge";
+    document.getElementById("groceryeditlocation").value = loc;
+    document.querySelectorAll("#groceryeditpills .edit-pill").forEach(p => {
+        p.classList.toggle("active-pill", p.dataset.loc === loc);
+        p.onclick = function() {
+            document.getElementById("groceryeditlocation").value = this.dataset.loc;
+            document.querySelectorAll("#groceryeditpills .edit-pill").forEach(b => b.classList.remove("active-pill"));
+            this.classList.add("active-pill");
+        };
+    });
+
+    clearCoverUpload("groceryeditcover");
+    if (item.image) {
+        const upload = document.getElementById("groceryeditcover");
+        const img = document.createElement("img");
+        img.src = item.image;
+        upload.appendChild(img);
+    }
+
+    renderGroceryEditMembers(item.members);
+}
+
+function renderGroceryEditMembers(currentMembers) {
+    selectedGroceryEditMembers = currentMembers ? [...currentMembers] : [];
+    const container = document.getElementById("groceryeditmembers");
+    container.innerHTML = "";
+
+    getHouseholdMemberNames().forEach(member => {
+        const isSelected = selectedGroceryEditMembers.includes(member);
+        const div = document.createElement("div");
+        div.classList.add("edit-member");
+        if (isSelected) div.classList.add("selected");
+
+        div.innerHTML = `
+            <div class="edit-member-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 30 30" fill="none">
+                    <path d="M11.25 17.1875C8.325 17.1875 2.5 18.65 2.5 21.5625V23.75H20V21.5625C20 18.65 14.175 17.1875 11.25 17.1875ZM5.425 21.25C6.475 20.525 9.0125 19.6875 11.25 19.6875C13.4875 19.6875 16.025 20.525 17.075 21.25H5.425ZM11.25 15C13.6625 15 15.625 13.0375 15.625 10.625C15.625 8.2125 13.6625 6.25 11.25 6.25C8.8375 6.25 6.875 8.2125 6.875 10.625C6.875 13.0375 8.8375 15 11.25 15ZM11.25 8.75C12.2875 8.75 13.125 9.5875 13.125 10.625C13.125 11.6625 12.2875 12.5 11.25 12.5C10.2125 12.5 9.375 11.6625 9.375 10.625C9.375 9.5875 10.2125 8.75 11.25 8.75Z" fill="#666"/>
+                </svg>
+            </div>
+            <span class="edit-member-name">${member}</span>
+        `;
+
+        div.onclick = function() {
+            const idx = selectedGroceryEditMembers.indexOf(member);
+            if (idx >= 0) {
+                selectedGroceryEditMembers.splice(idx, 1);
+                div.classList.remove("selected");
+            } else {
+                selectedGroceryEditMembers.push(member);
+                div.classList.add("selected");
+            }
+        };
+
+        container.appendChild(div);
+    });
+}
+
+function closeGroceryEditForm() {
+    openGroceryItem = null;
+    document.getElementById("groceryeditform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+
+function groceryEditFormSubmit() {
+    const name = document.getElementById("groceryeditname").value.trim();
+    const qtyVal = document.getElementById("groceryeditquantity").value.trim();
+    const unitsVal = document.getElementById("groceryeditunits").value.trim();
+    const location = document.getElementById("groceryeditlocation").value.trim();
+
+    if (name.toLowerCase() !== openGroceryItem.name.toLowerCase()) {
+        const duplicate = groceryItems.some(item =>
+            item.name.toLowerCase() === name.toLowerCase() && item !== openGroceryItem
+        );
+        if (duplicate) return false;
+    }
+
+    groceryItems = groceryItems.filter(item => item !== openGroceryItem);
+
+    const updatedItem = { name };
+    if (qtyVal !== "") {
+        updatedItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
+    }
+    if (location) updatedItem.location = location;
+    if (selectedGroceryEditMembers.length > 0) {
+        updatedItem.members = [...selectedGroceryEditMembers];
+    }
+
+    const coverSrc = getCoverImageSrc("groceryeditcover");
+    if (coverSrc) updatedItem.image = coverSrc;
+
+    if (checkedGroceryItems.has(openGroceryItem.name)) {
+        checkedGroceryItems.delete(openGroceryItem.name);
+        checkedGroceryItems.add(name);
+    }
+
+    groceryItems.push(updatedItem);
+    updateGroceryDisplay();
+    closeGroceryEditForm();
+    return false;
+}
 
 renderMembersPage();
 

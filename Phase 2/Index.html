@@ -185,10 +185,39 @@
             <!-- navbar here -->
             <div class="navbar">
                 <div class="tabcontainer">
-                    <button class="tablink" onclick="openTab('inv', this)" >Inventory</button>
-                    <button class="tablink" onclick="openTab('grocerytab', this)" id="defaultOpen">Grocery List</button>
-                    <button class="tablink" onclick="openTab('recipes', this)">Recipes</button>
-                    <button class="tablink" onclick="openTab('members', this)">Members</button>
+                    <button class="tablink" onclick="openTab('inv', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M8 6H32C33.1 6 34 6.9 34 8V32C34 33.1 33.1 34 32 34H8C6.9 34 6 33.1 6 32V8C6 6.9 6.9 6 8 6Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 18H34" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M20 6V34" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M14 12V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M26 12V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M14 23V27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M26 23V27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>Inventory</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('grocerytab', this)" id="defaultOpen">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="24" viewBox="0 0 34 24" fill="none">
+                            <path d="M10.2588 2.36719H30.7765M10.2588 11.8369H30.7765M10.2588 21.3066H30.7765M2.36743 2.36719H2.38321M2.36743 11.8369H2.38321M2.36743 21.3066H2.38321" stroke="currentColor" stroke-width="4.73485" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Grocery List</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('recipes', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="40" viewBox="0 0 36 40" fill="none">
+                            <path d="M6 4H30C31.1 4 32 4.9 32 6V34C32 35.1 31.1 36 30 36H6C4.9 36 4 35.1 4 34V6C4 4.9 4.9 4 6 4Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10 4V36" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M16 14H26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M16 20H26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>Recipes</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('members', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
+                            <path d="M18.7501 28.6457C13.8751 28.6457 4.16675 31.0832 4.16675 35.9373V39.5832H33.3334V35.9373C33.3334 31.0832 23.6251 28.6457 18.7501 28.6457ZM9.04175 35.4165C10.7917 34.2082 15.0209 32.8123 18.7501 32.8123C22.4792 32.8123 26.7084 34.2082 28.4584 35.4165H9.04175ZM18.7501 24.9998C22.7709 24.9998 26.0417 21.729 26.0417 17.7082C26.0417 13.6873 22.7709 10.4165 18.7501 10.4165C14.7292 10.4165 11.4584 13.6873 11.4584 17.7082C11.4584 21.729 14.7292 24.9998 18.7501 24.9998ZM18.7501 14.5832C20.4792 14.5832 21.8751 15.979 21.8751 17.7082C21.8751 19.4373 20.4792 20.8332 18.7501 20.8332C17.0209 20.8332 15.6251 19.4373 15.6251 17.7082C15.6251 15.979 17.0209 14.5832 18.7501 14.5832ZM33.4168 28.7707C35.8334 30.5207 37.5001 32.854 37.5001 35.9373V39.5832H45.8334V35.9373C45.8334 31.729 38.5418 29.3332 33.4168 28.7707ZM31.2501 24.9998C35.2709 24.9998 38.5418 21.729 38.5418 17.7082C38.5418 13.6873 35.2709 10.4165 31.2501 10.4165C30.1251 10.4165 29.0834 10.6873 28.1251 11.1457C29.4376 12.9998 30.2084 15.2707 30.2084 17.7082C30.2084 20.1457 29.4376 22.4165 28.1251 24.2707C29.0834 24.729 30.1251 24.9998 31.2501 24.9998Z" fill="currentColor"/>
+                        </svg>
+                        <span>Members</span>
+                    </button>
                 </div>
             </div>
 
@@ -365,6 +394,61 @@
                     <div class="edit-members" id="groceryaddmembers"></div>
 
                     <button type="submit" class="edit-submit-btn">Add to Grocery List</button>
+                </form>
+            </div>
+
+            <!-- Grocery List Edit Form -->
+            <div id="groceryeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeGroceryEditForm()">&times;</button>
+                </div>
+                <form onsubmit="return groceryEditFormSubmit()">
+                    <div class="recipe-cover-upload" id="groceryeditcover" onclick="document.getElementById('groceryeditcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="groceryeditcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'groceryeditcover')">
+                    </div>
+
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <input type="text" id="groceryeditname" class="edit-name-input" placeholder="Item name..." required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">QUANTITY</label>
+                            <input type="number" id="groceryeditquantity" class="edit-sm-input" min="0" step="any">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">UNITS</label>
+                            <select id="groceryeditunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Liters">Liters</option>
+                                <option value="Cups">Cups</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="edit-label-upper">STORAGE LOCATION</label>
+                    <div class="edit-pills" id="groceryeditpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="groceryeditlocation" value="Fridge">
+
+                    <label class="edit-label-upper">SHARED WITH</label>
+                    <div class="edit-members" id="groceryeditmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Save</button>
                 </form>
             </div>
 
