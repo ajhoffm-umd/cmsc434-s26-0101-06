@@ -41,45 +41,51 @@
 
             <!--- kitchen inventory tab here -->
             <div id="inv" class="tabcontent">
-
                 <div class="invcontainer">
 
-                    <h1>Inventory</h1>
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
 
                     <div class="search">
-                        <input id="invsearch" type="text" placeholder="Search...">
-                        <button id="invsearchsort" onclick="searchInvItems()"> Sort by Relevance</button>
+                        <input id="invsearch" type="text" placeholder="Search your inventory..." oninput="updateInvDisplay()">
+                    </div>
+
+                    <div class="listheader topheader">
+                        <h2>Inventory</h2>
+                        <div class="headeractions">
+                            <button id="invsortexp" class="expiringsoon" onclick="sortInvItemExp()">
+                                <span class="expiringsoon-icon">
+                                    <svg id="expiringsoon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                        <path d="M3 18H9V16H3V18ZM3 6V8H21V6H3ZM3 13H15V11H3V13Z" fill="#0D631B"/>
+                                    </svg>
+                                </span>
+                            <span>Expiring Soon</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="sort">
-                        <h2>Sort by: </h2>
-                        <button id="invsortalpha" onclick="sortInvItemAlpha()">Alpha</button>
-                        <button id="invsortexp" onclick="sortInvItemExp()">Expiration</button>
+                        <button class="locationtab active-tab" onclick="setInventoryFilter('All', this)">All</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Fridge', this)">Fridge</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Freezer', this)">Freezer</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Pantry', this)">Pantry</button>
                     </div>
 
-                    <div class="listheader">
-                        <h2> Showing: </h2>
-                        <select onchange="updateInvDisplay()" id="listdropdown">
-                        </select>
-                        <button id="invitemadd" class="itemadd" onclick="openInvAddForm()">add</button>
-                        <button id="invitemdeletetoggle" onclick="toggleInvDeleteMode()">trash</button>
-                        <button id="invdeletecancel" class="itemdeletecancel" onclick="itemInvDeleteCancel()">cancel</button>
-                    </div>
+                    <select onchange="updateInvDisplay()" id="listdropdown" style="display: none;">
+                        <option value="All">All</option>
+                        <option value="Fridge">Fridge</option>
+                        <option value="Freezer">Freezer</option>
+                        <option value="Pantry">Pantry</option>
+                    </select>
 
                     <div class="listarea">
-
-                        <ul id="invlist" class="pantrylist">
-                            <li class="header-row">
-                                <span>Name</span>
-                                <span>Quantity</span>
-                                <span>Expiration</span>
-                            </li>
-
-                        </ul>
-
+                        <div id="invlist" class="pantrylist">
+                            <!-- inventory cards get added here -->
+                        </div>
                     </div>
 
-
+                    <button id="invitemadd" class="itemadd floatingadd" onclick="openInvAddForm()">+</button>
+                    <button id="invitemdeletetoggle" class="floatingtrash" onclick="toggleInvDeleteMode()">trash</button>
+                    <button id="invdeletecancel" class="itemdeletecancel" onclick="itemInvDeleteCancel()">cancel</button>
 
                 </div>
 
@@ -185,9 +191,6 @@
             <div id="overlay" class="overlay"></div>
 
         </div>
-
-        
-
 
         <script>
 

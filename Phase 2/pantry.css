@@ -1,148 +1,319 @@
+/* vars for colors and fonts */
+html {
+  --main-bg-color: #F3FAFF;
+  --light-blue: #D5ECF8;
+  --white: #FFFFFF;
+  --black: #000000;
+  --green: #0D631B;
+  --red: #BA1A1A;
+  --grey: #6b7280;
+
+  --popup-background: #EDF7E4;
+
+  --font-family-main: "Inter", sans-serif;
+
+  /* TEXT STYLES FROM FIGMA */
+  /* DISPLAY */
+  --text-display: 700 30px / normal var(--font-family-main);
+  /* --text-display-letter-spacing: 0.6px; */
+
+  /* HEADING 2 */
+  --text-h2: 700 26px / 28px var(--font-family-main);
+
+  /* HEADING 3 */
+  --text-h3: 600 24px / 28px var(--font-family-main);
+
+  /* HEADING 4 (CAPS) */
+  --text-h4: 500 20px / 20px var(--font-family-main);
+  --text-h4-transform: uppercase;
+
+  /* PARAGRAPH */ 
+  --text-paragraph: 500 20px / 20px var(--font-family-main);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-main);
+  background-color: var(--main-bg-color);
+  color: var(--black);
+}
 
 .invcontainer {
-    height: 98%;
-    width: inherit; 
-
-    
-    background-color: var(--bg-main);
-    border-style: var(--wire);
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px 24px 0 24px;
+    background-color: var(--main-bg-color);
+    position: relative;
+    overflow: hidden;
 }
 
-h1 {
-    font-size: 40px;
-    margin: 10px;
+/* brand + headings */
+
+/* KitchenKompanion Title */
+.brandtitle {
+    font: var(--text-display)
+}
+.brandgreen {
+    color: var(--green);
 }
 
-/* SEARCHING DIV */
+.topheader {
+    display: flex;
+    justify-content: space-between;
+    width: 572px;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Inventory Header */
+.topheader h2 {
+    font: var(--text-h2)
+}
+
+/* Expiring Soon Button */
+.expiringsoon {
+    border: none;
+    background: transparent;
+    cursor: pointer; /* so they can see it's clickable */
+    font: var(--text-h3);
+    color: var(--green);
+    display: inline-flex;
+}
+
+.expiringsoon-icon svg {
+  width: 25px;
+  height: 25px;
+  display: block;
+  transition: transform 0.2s ease;
+  transform-origin: center;
+  margin-right: 3px;
+}
+
+.expiringsoon-icon svg.flipped {
+  transform: scaleY(-1);
+
+}
+
+/* search */
 
 .search {
-    border-color: black; 
-    border-style: var(--wire);
-
-    height: 50px;
-    width: inherit;
-    margin: 0px 20px 0px 20px;
-    padding: 0px;
-
-    display: flex;
-    justify-content: center;
-    align-content: center; 
-
-    
+    width: 100%;
+    /* margin: 0;
+    padding: 0; */
+    display: block;
+    height: auto;
+    /* background: var(--white); */
 }
 
-.search input[type=text] {
-    height: 80%;
-    width: 60%;
-    
+.search input {
+    width: 100%;
+    height: 56px;
+    box-sizing: border-box;
     border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
+    outline: none;
+    border-radius: 18px;
+    background: var(--white);
+    padding: 0 20px;
+    /* color: #6b7280; */
 }
 
-.search button {
-    height: 80%;
-    padding: 6px;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
-}
-
-/* SORTING DIV */
+/* location tabs */
 
 .sort {
-    border-color: black; 
-    border-style: var(--wire);
-
-    height: 50px;
-    width: inherit;
-    margin: 0px 20px 0 20px;
-
     display: flex;
-    justify-content: center;
-    align-content: center; 
-    
+    align-items: center;
+    gap: 0;
+    margin: 0 0 20px 0;
+    padding: 8px;
+    background: #cfe3f1;
+    border-radius: 22px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.sort button {
-    height: 80%;
-    padding: 6px;
-    margin-top: 8px;
-    margin-right: 16px;
-    margin-bottom: 8px;
+.locationtab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    border-radius: 18px;
+    padding: 14px 8px;
     font-size: 17px;
-    width: 100px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #111111;
 }
 
-.sort h2 {
-    font-size: 20pt;
-    margin-top: 13px;
-    margin-right: 20px;
-
+.active-tab {
+    background: #ffffff;
 }
 
-/* SHOWING DIV */
+/* list area */
+
+.listarea {
+    margin-top: 0;
+    padding-bottom: 140px;
+    height: calc(100% - 220px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.pantrylist {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* inventory cards */
+
+.inventory-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 16px 18px;
+    min-height: 96px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.inventory-card-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    flex: 1;
+}
+
+.inventory-card-image {
+    width: 58px;
+    height: 58px;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+/* info card */
+.inventory-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.inventory-card-name {
+    font: var(--text-h4);
+}
+
+/* members */
+.inventory-card-members {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.inventory-card-members-icon {  
+    width: 30px;
+    height: 30px;
+}
+.inventory-card-members-text {
+    font: var(--text-paragraph);
+}
+
+.inventory-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+/* quantity */
+.inventory-card-qty {
+    font-size: 18px; 
+    text-transform: uppercase;
+}
+
+/* item location */ 
+.inventory-card-location {
+  font-size: 18px; 
+  /* text-transform: uppercase; */
+}
+
+/* item expiration info */ 
+.inventory-card-exp {
+    font-size: 18px;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+.inventory-card-exp.urgent {
+    color: var(--red);
+}
+
+/* trash icon */ 
+.inventory-card-trash {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    margin-left: 14px;
+    width: 29px;
+    height: 29px;
+}
+
+/* floating buttons */
 
 .itemadd {
     display: block;
+}
+
+.floatingadd {
+    position: absolute;
+    right: 24px;
+    bottom: 20px;
+    width: 78px;
+    height: 78px;
+    border: none;
+    border-radius: 22px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 44px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.floatingtrash {
+    display: none;
 }
 
 .itemdeletecancel {
     display: none;
 }
 
-/* list header */
-
-.listheader {
-    border-color: black; 
-    border-style: var(--wire);
-
-    height: 50px;
-    width: inherit;
-    margin: 20px 20px 0px 20px;
-    padding-left: 10px;
-
-    display: flex;
-    justify-content: left;
-    align-content: center; 
-    
-}
-
-.listheader h2 {
-    font-size: 20pt;
-    margin-top: 13px;
-    margin-right: 20px;
-
-}
-
-.listheader select {
-    width: 40%;
-    margin: 8px 0 0 0;
-}
-
-/* add item form */
+/* popup forms */
 
 .form-popup {
-  display: none; /* hidden by default */
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
-  border: 2px solid #ccc;
-  background-color: white;
-  padding: 20px;
-  z-index: 1000;
-  height: auto;
-  max-height: 700px;
-  width: 500px;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    background-color: var(--popup-background);
+    padding: 20px;
+    z-index: 1000;
+    width: 500px;
+    max-height: 700px;
+    box-sizing: border-box;
+    border-radius: 30px;  
 }
 
 .formwarning {
-    color: red;
+    color: var(--red);
     font-size: 16px;
-    padding: 0px;
-    margin: 0px;
+    margin: 0;
     display: none;
 }
 
@@ -154,74 +325,10 @@ h1 {
     font-size: 16pt;
 }
 
-.form-container input {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-}
-
+.form-container input,
 .form-container select {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-}
-
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 999;
-}
-
-/* list item aesthetics */
-
-.pantrylist {
-    border-color: black;
-    border-style: none;
-
-    background-color: var(--bg-nav);
-    border-radius: 40px;
-
-    height: 66%;
-
-    margin: 20px 0px 20px 20px;
-    padding-top: 10px;
-
-    list-style-type: none;
-
-    width: 565px;
-
-    overflow-y:scroll;
-    overflow-x:hidden;
-
-}
-
-.item-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr; 
-  gap: 10px;
-  padding: 5px 0;
-  width: 550px;
-  font-size: 12pt;
-}
-
-.header-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  font-weight: bold;
-  border-bottom: 2px solid #ccc;
-}
-
-.pantrylist li {
-    background-color: var(--bg-main);
-    margin: 5px 10px 10px 15px;
-    padding: 5px 10px 5px 10px;
-    transform: translateX(-40px);
-    width: 530px;
-    font-size: 20;
-    border-radius: 30px
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    box-sizing: border-box;
 }
