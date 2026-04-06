@@ -7,8 +7,11 @@ html {
   --green: #0D631B;
   --red: #BA1A1A;
   --grey: #6b7280;
+  --light-grey: #E1E3E4;
 
   --popup-background: #EDF7E4;
+  --light-green: #F5FCED;
+  --form-text: #55634F;
 
   --font-family-main: "Inter", sans-serif;
 
@@ -101,9 +104,19 @@ body {
     width: 100%;
     /* margin: 0;
     padding: 0; */
-    display: block;
+    /* display: block; */
     height: auto;
-    /* background: var(--white); */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* background: var(--grey); */
+}
+
+.search svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: #70787D;
 }
 
 .search input {
@@ -113,9 +126,16 @@ body {
     border: none;
     outline: none;
     border-radius: 18px;
-    background: var(--white);
+    background: var(--light-grey);
     padding: 0 20px;
-    /* color: #6b7280; */
+    font: var(--text-h3);
+}
+
+/* this rule overrides the browsers default autofill color */
+.search input:-webkit-autofill,
+.search input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--light-grey) inset;
+    -webkit-text-fill-color: inherit;
 }
 
 /* location tabs */
@@ -331,4 +351,204 @@ body {
     padding: 8px;
     margin: 10px 0;
     box-sizing: border-box;
+}
+
+/* ---- edit form ---- */
+
+.edit-popup {
+    background-color: var(--light-green);
+    padding: 28px;
+    width: 560px;
+    max-height: 90vh;
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    overflow-y: auto;
+}
+
+.edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.edit-header h2 {
+    font: var(--text-h2);
+    /* margin: 0;
+    font-size: 22px; */
+    color: var(--black);
+    /* color: #293624; */
+    /* font-family: Inter; */
+    font-size: 30px;
+    font-style: normal;
+    /* font-weight: 700; */
+}
+
+.edit-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--light-grey);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    flex-shrink: 0;
+}
+
+.edit-label-main {
+    display: block;
+    font-family: var(--font-family-main);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #006F1C;
+    margin-bottom: 6px;
+}
+
+.edit-required {
+    color: var(--red);
+}
+
+.edit-name-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    padding: 10px 0;
+    background: transparent;
+    box-sizing: border-box;
+    font-family: var(--font-family-main);
+    color: var(--form-text);
+}
+
+.edit-divider {
+    height: 1px;
+    background: var(--light-grey);
+    margin: 4px 0 20px;
+}
+
+.edit-row-3 {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.edit-col {
+    flex: 1;
+    min-width: 0;
+}
+
+.edit-label-upper {
+    display: block;
+    font-family: var(--font-family-main);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 15px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--form-text);
+    margin-bottom: 8px;
+}
+
+.edit-sm-input,
+.edit-sm-select {
+    width: 100%;
+    padding: 12px 12px;
+    border: none;
+    border-radius: 14px;
+    background: #eef0f1;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    font-family: var(--font-family-main);
+    color: var(--form-text);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.edit-sm-select {
+    background: #eef0f1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+.edit-pills {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.edit-pill {
+    padding: 12px 24px;
+    border-radius: 22px;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #eef0f1;
+    color: var(--form-text);
+    font-family: var(--font-family-main);
+}
+
+.edit-pill.active-pill {
+    background: var(--green);
+    color: var(--white);
+}
+
+.edit-members {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.edit-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.edit-member-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #eef0f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid transparent;
+    box-sizing: border-box;
+}
+
+.edit-member.selected .edit-member-circle {
+    border-color: var(--black);
+}
+
+.edit-member-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--form-text);
+}
+
+.edit-submit-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 18px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-family-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }

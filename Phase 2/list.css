@@ -1,46 +1,96 @@
-.grocerylist {
-    border-color: black;
-    border-style: none;
+/* grocery list cards */
 
-    background-color: var(--bg-nav);
-    border-radius: 40px;
-
-    height: 66%;
-
-    margin: 20px 0px 20px 20px;
-    padding-top: 10px;
-
-    list-style-type: none;
-
-    width: 565px;
-
-    overflow-y:scroll;
-    overflow-x:hidden;
-
+.grocery-card {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 14px 18px;
+    min-height: 80px;
+    box-sizing: border-box;
+    width: 100%;
+    gap: 14px;
 }
 
-.item-row-grocery {
-  display: grid;
-  grid-template-columns: 4fr 2fr 2fr 1fr; 
-  gap: 10px;
-  padding: 5px 0;
-  width: 550px;
-  font-size: 12pt;
+.grocery-checkbox {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+    cursor: pointer;
 }
 
-.header-row-grocery {
-  display: grid;
-  grid-template-columns: 4fr 2fr 2fr 1fr;
-  font-weight: bold;
-  border-bottom: 2px solid #ccc;
+.grocery-card-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    object-fit: cover;
 }
 
-.grocerylist li {
-    background-color: var(--bg-main);
-    margin: 5px 10px 10px 15px;
-    padding: 5px 10px 5px 10px;
-    transform: translateX(-40px);
-    width: 530px;
-    font-size: 20;
-    border-radius: 30px
+.grocery-card-image-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.grocery-card-name {
+    font: var(--text-h4);
+    flex: 1;
+    min-width: 0;
+}
+
+.grocery-card-qty {
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--grey);
+    white-space: nowrap;
+}
+
+.grocery-card-trash {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.grocery-card.checked {
+    opacity: 0.5;
+}
+
+.grocery-card.checked .grocery-card-name {
+    text-decoration: line-through;
+}
+
+/* add item to inventory button */
+
+.empty-list-message {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--black);
+    padding: 80px 0;
+    font-family: var(--font-family-main);
+}
+
+.grocery-to-inv-btn {
+    border: 2px solid var(--black);
+    background: transparent;
+    border-radius: 22px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-family-main);
+    white-space: nowrap;
+    color: var(--black);
 }

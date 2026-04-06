@@ -13,7 +13,6 @@ defaultKitchenLocations.forEach(location => {
 locationOptions += `<option value="${location}">${location}</option>`;
 });
 
-let itemInvDeleteFlag = false;
 let expSortAscending = true;
 
 selectElement.innerHTML = locationOptions;
@@ -222,7 +221,7 @@ function pushElemListAdd(item) {
 
     trash.onclick = function(event) {
         event.stopPropagation();
-        invListItemOnClick(card);
+        deleteInvItem(card);
     };
 
     // BUILD CARD
@@ -231,7 +230,7 @@ function pushElemListAdd(item) {
     card.appendChild(trash);
 
     card.onclick = function() {
-        invListItemOnClick(this);
+        openInvEditForm(this);
     };
 
     document.getElementById("invlist").appendChild(card);
@@ -239,73 +238,11 @@ function pushElemListAdd(item) {
 
 kitchenItems.forEach(item => {pushElemListAdd(item)});
 
-// ITEM DELETE MODE CODE --------------------- //
+// ITEM DELETE --------------------- //
 
-// html elements
-var deleteQueue = [];
-
-function invListItemOnClick(elem) {
-    if (itemInvDeleteFlag) {
-
-        var i = deleteQueue.indexOf(elem);
-        console.log(i);
-        if (i >= 0) {
-            console.log("removing " + elem.id + " from queue");
-            deleteQueue.splice(i, 1);
-            elem.style.background = bg_main;
-        } else {
-            console.log("adding " + elem.id + " to queue");
-            deleteQueue.push(elem);
-            elem.style.background = "red";
-            console.log(deleteQueue);
-        }
-        
-    } else {
-        openInvEditForm(elem);
-    }
-}
-
-function toggleInvDeleteMode() {
-    
-    itemInvDeleteFlag = !itemInvDeleteFlag;
-    if(itemInvDeleteFlag) {
-        document.getElementById("invsearchsort").disabled = true;
-        document.getElementById("invsortalpha").disabled = true;
-        document.getElementById("invsortexp").disabled = true;
-        document.getElementById("invitemdeletetoggle").style.background = "red";
-        document.getElementById("invitemadd").style.display = "none";
-        document.getElementById("invdeletecancel").style.display = "block";
-    } else {
-        document.getElementById("invsearchsort").disabled = false;
-        document.getElementById("invsortalpha").disabled = false;
-        document.getElementById("invsortexp").disabled = false;
-        document.getElementById("invitemdeletetoggle").style.background = "green";
-        if (deleteQueue.length != 0) {
-            deleteQueue.forEach(elem => {
-                console.log("removing " + elem.id);
-                kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() != elem.id.toLowerCase());
-                elem.remove();
-            });
-        }
-        document.getElementById("invitemdeletetoggle").style.background = "green";
-        document.getElementById("invitemadd").style.display = "block";
-        document.getElementById("invdeletecancel").style.display = "none";
-    }
-}
-
-function itemInvDeleteCancel() {
-    document.getElementById("invsearchsort").disabled = false;
-    document.getElementById("invsortalpha").disabled = false;
-    document.getElementById("invsortexp").disabled = false;
-    deleteQueue.forEach(elem =>{
-        elem.style.background = bg_main;
-    });
-    deleteQueue = [];
-    document.getElementById("invitemdeletetoggle").style.background = "green";
-    document.getElementById("invitemadd").style.display = "block";
-    document.getElementById("invdeletecancel").style.display = "none";
-    itemInvDeleteFlag = false;
-    
+function deleteInvItem(cardElem) {
+    kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() !== cardElem.id.toLowerCase());
+    cardElem.remove();
 }
 
 
@@ -314,48 +251,45 @@ function itemInvDeleteCancel() {
 
 // add a list item using the form
 
+let selectedAddMembers = [];
+
 function addListItemFormSubmit() {
-
-    var name, location, quantity, expirationDate;
-
-    name = document.getElementById("invnewname").value.trim();
-    location = document.getElementById("invnewdrop").value.trim();
-    quantity = document.getElementById("invnewquantity").value.trim();
-    expirationDate = document.getElementById("invnewdate").value.trim();
+    const name = document.getElementById("invnewname").value.trim();
+    const location = document.getElementById("invnewdrop").value.trim();
+    const qtyVal = document.getElementById("invnewquantity").value.trim();
+    const unitsVal = document.getElementById("invnewunits").value.trim();
+    const expirationDate = document.getElementById("invnewdate").value.trim();
 
     var nameflag = false;
     kitchenItems.forEach(item => {
         if (item.name.toLowerCase() == name.toLowerCase()) {
             document.getElementById("invformnamewarning").style.display = "block";
             nameflag = true;
-            console.log("known");
         }
     });
-    if(nameflag){
+    if (nameflag) {
         return false;
     }
 
-    const newItem = {
-        name,
-        location
-    };
+    const newItem = { name, location };
 
-    if (quantity !== "") {
-        newItem.quantity = quantity;
+    if (qtyVal !== "") {
+        newItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
     }
 
     if (expirationDate !== "") {
         newItem.expirationDate = expirationDate;
     }
 
+    if (selectedAddMembers.length > 0) {
+        newItem.members = [...selectedAddMembers];
+    }
+
     kitchenItems.push(newItem);
-
     pushElemListAdd(newItem);
-
     closeListAddForm();
 
-    return false; // prevents page refresh
-
+    return false;
 }
 
 // open the add and edit an item forms
@@ -364,62 +298,155 @@ function openInvAddForm() {
     document.getElementById("invaddform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 
-    const selectElement = document.getElementById('invnewdrop');
+    document.getElementById("invnewname").value = "";
+    document.getElementById("invnewquantity").value = "";
+    document.getElementById("invnewunits").value = "";
+    document.getElementById("invnewdate").value = "";
+    document.getElementById("invnewdrop").value = "Fridge";
 
-    let locationOptions = '';
-    defaultKitchenLocations.forEach(location => {
-    locationOptions += `<option value="${location}">${location}</option>`;
+    document.querySelectorAll("#invaddpills .edit-pill").forEach(p => {
+        p.classList.toggle("active-pill", p.dataset.loc === "Fridge");
+        p.onclick = function() {
+            document.getElementById("invnewdrop").value = this.dataset.loc;
+            document.querySelectorAll("#invaddpills .edit-pill").forEach(b => b.classList.remove("active-pill"));
+            this.classList.add("active-pill");
+        };
     });
 
-    selectElement.innerHTML = locationOptions;
+    renderAddMembers();
+}
+
+function renderAddMembers() {
+    selectedAddMembers = [];
+    const container = document.getElementById("invaddmembers");
+    container.innerHTML = "";
+
+    householdMembers.forEach(member => {
+        const div = document.createElement("div");
+        div.classList.add("edit-member");
+
+        div.innerHTML = `
+            <div class="edit-member-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 30 30" fill="none">
+                    <path d="M11.25 17.1875C8.325 17.1875 2.5 18.65 2.5 21.5625V23.75H20V21.5625C20 18.65 14.175 17.1875 11.25 17.1875ZM5.425 21.25C6.475 20.525 9.0125 19.6875 11.25 19.6875C13.4875 19.6875 16.025 20.525 17.075 21.25H5.425ZM11.25 15C13.6625 15 15.625 13.0375 15.625 10.625C15.625 8.2125 13.6625 6.25 11.25 6.25C8.8375 6.25 6.875 8.2125 6.875 10.625C6.875 13.0375 8.8375 15 11.25 15ZM11.25 8.75C12.2875 8.75 13.125 9.5875 13.125 10.625C13.125 11.6625 12.2875 12.5 11.25 12.5C10.2125 12.5 9.375 11.6625 9.375 10.625C9.375 9.5875 10.2125 8.75 11.25 8.75Z" fill="#666"/>
+                </svg>
+            </div>
+            <span class="edit-member-name">${member}</span>
+        `;
+
+        div.onclick = function() {
+            const idx = selectedAddMembers.indexOf(member);
+            if (idx >= 0) {
+                selectedAddMembers.splice(idx, 1);
+                div.classList.remove("selected");
+            } else {
+                selectedAddMembers.push(member);
+                div.classList.add("selected");
+            }
+        };
+
+        container.appendChild(div);
+    });
 }
 
 function closeListAddForm() {
-  document.getElementById("invaddform").style.display = "none";
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("invformnamewarning").style.display = "none";
+    document.getElementById("invaddform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("invformnamewarning").style.display = "none";
 }
 
 var openItem = null;
 var openElem = null;
 
-// open the edit an item form on click the item
+const householdMembers = ["Alice", "Bob", "Clara", "David"];
+let selectedEditMembers = [];
+
 function openInvEditForm(elem) {
-    // set the form visible and overlay
     document.getElementById("inveditform").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 
-    // get the dropdown element and set locations
-    const selectElement = document.getElementById('inveditdrop');
-
-    let locationOptions = '';
-    defaultKitchenLocations.forEach(location => {
-    locationOptions += `<option value="${location}">${location}</option>`;
-    });
-
-    selectElement.innerHTML = locationOptions;
-
-    // get the current item stats
-    console.log(elem.id);
     openItem = kitchenItems.find(item => item.name == elem.id);
     openElem = elem;
-    console.log(openItem);
 
-    document.getElementById("inveditdrop").value = openItem.location;
-
-    // set defaults
     document.getElementById("inveditname").value = openItem.name;
-    if (openItem.hasOwnProperty("quantity")) {
-        document.getElementById("inveditquantity").value = openItem.quantity;
+
+    if (openItem.quantity) {
+        const parts = openItem.quantity.split(" ");
+        document.getElementById("inveditquantity").value = parts[0];
+        if (parts.length >= 2) {
+            const unitStr = parts.slice(1).join(" ");
+            const unitsSelect = document.getElementById("inveditunits");
+            let matched = false;
+            for (let opt of unitsSelect.options) {
+                if (opt.value.toLowerCase() === unitStr.toLowerCase()) {
+                    unitsSelect.value = opt.value;
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) unitsSelect.value = "";
+        } else {
+            document.getElementById("inveditunits").value = "";
+        }
     } else {
         document.getElementById("inveditquantity").value = "";
-    }
-    if (openItem.hasOwnProperty("expirationDate")) {
-        document.getElementById("inveditdate").value = openItem.expirationDate;
-    } else {
-        document.getElementById("inveditdate").value = "";
+        document.getElementById("inveditunits").value = "";
     }
 
+    document.getElementById("inveditdate").value = openItem.expirationDate || "";
+
+    // set location pills
+    const loc = openItem.location;
+    document.getElementById("inveditdrop").value = loc;
+    document.querySelectorAll("#inveditpills .edit-pill").forEach(p => {
+        p.classList.toggle("active-pill", p.dataset.loc === loc);
+    });
+
+    // set up pill click handlers
+    document.querySelectorAll("#inveditpills .edit-pill").forEach(p => {
+        p.onclick = function() {
+            document.getElementById("inveditdrop").value = this.dataset.loc;
+            document.querySelectorAll("#inveditpills .edit-pill").forEach(b => b.classList.remove("active-pill"));
+            this.classList.add("active-pill");
+        };
+    });
+
+    renderEditMembers(openItem.members);
+}
+
+function renderEditMembers(currentMembers) {
+    selectedEditMembers = currentMembers ? [...currentMembers] : [];
+    const container = document.getElementById("inveditmembers");
+    container.innerHTML = "";
+
+    householdMembers.forEach(member => {
+        const isSelected = selectedEditMembers.includes(member);
+        const div = document.createElement("div");
+        div.classList.add("edit-member");
+        if (isSelected) div.classList.add("selected");
+
+        div.innerHTML = `
+            <div class="edit-member-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 30 30" fill="none">
+                    <path d="M11.25 17.1875C8.325 17.1875 2.5 18.65 2.5 21.5625V23.75H20V21.5625C20 18.65 14.175 17.1875 11.25 17.1875ZM5.425 21.25C6.475 20.525 9.0125 19.6875 11.25 19.6875C13.4875 19.6875 16.025 20.525 17.075 21.25H5.425ZM11.25 15C13.6625 15 15.625 13.0375 15.625 10.625C15.625 8.2125 13.6625 6.25 11.25 6.25C8.8375 6.25 6.875 8.2125 6.875 10.625C6.875 13.0375 8.8375 15 11.25 15ZM11.25 8.75C12.2875 8.75 13.125 9.5875 13.125 10.625C13.125 11.6625 12.2875 12.5 11.25 12.5C10.2125 12.5 9.375 11.6625 9.375 10.625C9.375 9.5875 10.2125 8.75 11.25 8.75Z" fill="#666"/>
+                </svg>
+            </div>
+            <span class="edit-member-name">${member}</span>
+        `;
+
+        div.onclick = function() {
+            const idx = selectedEditMembers.indexOf(member);
+            if (idx >= 0) {
+                selectedEditMembers.splice(idx, 1);
+                div.classList.remove("selected");
+            } else {
+                selectedEditMembers.push(member);
+                div.classList.add("selected");
+            }
+        };
+
+        container.appendChild(div);
+    });
 }
 
 function closeListEditForm() {
@@ -431,44 +458,38 @@ function closeListEditForm() {
 }
 
 function editListItemFormSubmit() {
-
     try {
+        kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() !== openElem.id.toLowerCase());
+        openElem.remove();
 
-    kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() !== openElem.id.toLowerCase());
-    openElem.remove();
-    
-    var name, location, quantity, expirationDate;
+        const name = document.getElementById("inveditname").value.trim();
+        const location = document.getElementById("inveditdrop").value.trim();
+        const qtyVal = document.getElementById("inveditquantity").value.trim();
+        const unitsVal = document.getElementById("inveditunits").value.trim();
+        const expirationDate = document.getElementById("inveditdate").value.trim();
 
-    name = document.getElementById("inveditname").value.trim();
-    location = document.getElementById("inveditdrop").value.trim();
-    quantity = document.getElementById("inveditquantity").value.trim();
-    expirationDate = document.getElementById("inveditdate").value.trim();
+        const newItem = { name, location };
 
-    const newItem = {
-        name,
-        location
-    };
+        if (qtyVal !== "") {
+            newItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
+        }
 
-    if (quantity !== "") {
-        newItem.quantity = quantity;
+        if (expirationDate !== "") {
+            newItem.expirationDate = expirationDate;
+        }
+
+        if (selectedEditMembers.length > 0) {
+            newItem.members = [...selectedEditMembers];
+        }
+
+        kitchenItems.push(newItem);
+        pushElemListAdd(newItem);
+        closeListEditForm();
+        updateInvDisplay();
+    } catch (e) {
+        console.log(e);
+        return false;
     }
-
-    if (expirationDate !== "") {
-        newItem.expirationDate = expirationDate;
-    }
-
-    kitchenItems.push(newItem);
-
-    pushElemListAdd(newItem);
-
-    closeListEditForm();
-
-    updateInvDisplay();
-}
-catch (e) {
-    console.log(e);
-    return false;
-}
 
     return false; // prevents page refresh
 
@@ -548,41 +569,327 @@ function setInventoryFilter(location, buttonElem) {
     buttonElem.classList.add("active-tab");
 }
 
-// --------- COMMENTING OUT FOR NOW TO ALIGN WITH FIGMA -----
+// ===================== GROCERY LIST ===================== //
 
-// search and levenshtein distance
-// function levenshtein(a, b) {
-//   const rows = a.length + 1;
-//   const cols = b.length + 1;
-//   const dp = Array.from({ length: rows }, () => Array(cols).fill(0));
+let groceryItems = [
+    { name: "Whole Milk", quantity: "1 LITER" },
+    { name: "Cauliflower", quantity: "1 LITER" },
+    { name: "Eggs", quantity: "1 LITER" }
+];
 
-//   for (let i = 0; i < rows; i++) dp[i][0] = i;
-//   for (let j = 0; j < cols; j++) dp[0][j] = j;
+let checkedGroceryItems = new Set();
 
-//   for (let i = 1; i < rows; i++) {
-//     for (let j = 1; j < cols; j++) {
-//       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-//       dp[i][j] = Math.min(
-//         dp[i - 1][j] + 1,
-//         dp[i][j - 1] + 1,
-//         dp[i - 1][j - 1] + cost
-//       );
-//     }
-//   }
+function updateGroceryDisplay() {
+    const container = document.getElementById("groceryitems");
+    const query = document.getElementById("grocerysearch").value.trim().toLowerCase();
+    container.innerHTML = "";
 
-//   return dp[a.length][b.length];
-// }
+    const filtered = groceryItems.filter(item => item.name.toLowerCase().includes(query));
 
-// function searchInvItems() {
-//     console.log("pressed");
+    if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.classList.add("empty-list-message");
+        empty.textContent = "Grocery List Empty";
+        container.appendChild(empty);
+    } else {
+        filtered.forEach(item => pushGroceryCard(item));
+    }
+}
 
-//     const query = document.getElementById("invsearch").value.trim();
+function pushGroceryCard(item) {
+    const card = document.createElement("div");
+    card.classList.add("grocery-card");
+    card.id = "grocery-" + item.name;
 
-//     kitchenItems.forEach(item => {
-//         item.dist = levenshtein(item.name, query) / ((+item.name.includes(query) * 7) + 1);
-//     });
+    if (checkedGroceryItems.has(item.name)) {
+        card.classList.add("checked");
+    }
 
-//     kitchenItems.sort((a, b) => a.dist - b.dist);
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("grocery-checkbox");
+    checkbox.checked = checkedGroceryItems.has(item.name);
+    checkbox.onchange = function() {
+        if (this.checked) {
+            checkedGroceryItems.add(item.name);
+            card.classList.add("checked");
+        } else {
+            checkedGroceryItems.delete(item.name);
+            card.classList.remove("checked");
+        }
+    };
 
-//     updateInvDisplay();
-// }
+    let imageEl;
+    if (item.image) {
+        imageEl = document.createElement("img");
+        imageEl.src = item.image;
+        imageEl.alt = item.name;
+        imageEl.classList.add("grocery-card-image");
+    } else {
+        imageEl = document.createElement("div");
+        imageEl.classList.add("grocery-card-image-placeholder");
+    }
+
+    const name = document.createElement("div");
+    name.classList.add("grocery-card-name");
+    name.textContent = item.name;
+
+    const qty = document.createElement("div");
+    qty.classList.add("grocery-card-qty");
+    qty.textContent = item.quantity || "--";
+
+    const trash = document.createElement("button");
+    trash.classList.add("grocery-card-trash");
+    trash.setAttribute("aria-label", `Delete ${item.name}`);
+    trash.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="none">
+    <path d="M3.625 7.25002H6.04167M6.04167 7.25002H25.375M6.04167 7.25002L6.04167 24.1667C6.04167 24.8076 6.29628 25.4223 6.74949 25.8755C7.20271 26.3287 7.81739 26.5834 8.45833 26.5834H20.5417C21.1826 26.5834 21.7973 26.3287 22.2505 25.8755C22.7037 25.4223 22.9583 24.8076 22.9583 24.1667V7.25002M9.66667 7.25002V4.83335C9.66667 4.19241 9.92128 3.57773 10.3745 3.12451C10.8277 2.6713 11.4424 2.41669 12.0833 2.41669H16.9167C17.5576 2.41669 18.1723 2.6713 18.6255 3.12451C19.0787 3.57773 19.3333 4.19241 19.3333 4.83335V7.25002"
+        stroke="#1E1E1E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `;
+    trash.onclick = function() {
+        deleteGroceryItem(item.name);
+    };
+
+    card.appendChild(checkbox);
+    card.appendChild(imageEl);
+    card.appendChild(name);
+    card.appendChild(qty);
+    card.appendChild(trash);
+
+    document.getElementById("groceryitems").appendChild(card);
+}
+
+function deleteGroceryItem(itemName) {
+    groceryItems = groceryItems.filter(item => item.name !== itemName);
+    checkedGroceryItems.delete(itemName);
+    updateGroceryDisplay();
+}
+
+function addCheckedToInventory() {
+    const toMove = groceryItems.filter(item => checkedGroceryItems.has(item.name));
+    if (toMove.length === 0) return;
+
+    toMove.forEach(item => {
+        const newInvItem = {
+            name: item.name,
+            location: "Pantry"
+        };
+        if (item.quantity) newInvItem.quantity = item.quantity;
+        kitchenItems.push(newInvItem);
+    });
+
+    groceryItems = groceryItems.filter(item => !checkedGroceryItems.has(item.name));
+    checkedGroceryItems.clear();
+    updateGroceryDisplay();
+    updateInvDisplay();
+}
+
+// grocery add form
+
+function openGroceryAddForm() {
+    document.getElementById("groceryaddform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("grocerynewname").value = "";
+    document.getElementById("grocerynewquantity").value = "";
+    document.getElementById("grocerynewunits").value = "";
+}
+
+function closeGroceryAddForm() {
+    document.getElementById("groceryaddform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("groceryformnamewarning").style.display = "none";
+}
+
+function groceryAddFormSubmit() {
+    const name = document.getElementById("grocerynewname").value.trim();
+    const qtyVal = document.getElementById("grocerynewquantity").value.trim();
+    const unitsVal = document.getElementById("grocerynewunits").value.trim();
+
+    let nameflag = false;
+    groceryItems.forEach(item => {
+        if (item.name.toLowerCase() === name.toLowerCase()) {
+            document.getElementById("groceryformnamewarning").style.display = "block";
+            nameflag = true;
+        }
+    });
+    if (nameflag) return false;
+
+    const newItem = { name };
+    if (qtyVal !== "") {
+        newItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
+    }
+
+    groceryItems.push(newItem);
+    updateGroceryDisplay();
+    closeGroceryAddForm();
+    return false;
+}
+
+groceryItems.forEach(item => { pushGroceryCard(item) });
+
+
+// ===================== RECIPES ===================== //
+
+let recipes = [
+    { name: "Pork & Apples", prepTime: 30, ingredients: ["3 Pork Chops", "2 Apples", "1 Cup Broth"], instructions: "Season pork, sear, add sliced apples and broth. Simmer 25 min." },
+    { name: "Apple Pie", prepTime: 45, ingredients: ["5 Apples", "1 Cup Sugar", "2 Pie Crusts"], instructions: "Fill crust with sliced apples and sugar. Bake at 375F for 45 min." },
+    { name: "Ham & Corn", prepTime: 25, ingredients: ["1 Ham Steak", "3 Ears Corn", "Butter"], instructions: "Grill ham and corn. Serve with butter." }
+];
+
+function updateRecipeDisplay() {
+    const container = document.getElementById("recipeitems");
+    const query = document.getElementById("recipesearch").value.trim().toLowerCase();
+    container.innerHTML = "";
+
+    const filtered = recipes.filter(r => r.name.toLowerCase().includes(query));
+
+    if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.classList.add("empty-list-message");
+        empty.textContent = "No Recipes Yet";
+        container.appendChild(empty);
+    } else {
+        filtered.forEach(r => pushRecipeCard(r));
+    }
+}
+
+function pushRecipeCard(recipe) {
+    const card = document.createElement("div");
+    card.classList.add("recipe-card");
+    card.id = "recipe-" + recipe.name;
+
+    let imageEl;
+    if (recipe.coverImage) {
+        imageEl = document.createElement("img");
+        imageEl.src = recipe.coverImage;
+        imageEl.alt = recipe.name;
+        imageEl.classList.add("recipe-card-image");
+    } else {
+        imageEl = document.createElement("div");
+        imageEl.classList.add("recipe-card-image-placeholder");
+        imageEl.textContent = "🍽";
+    }
+
+    const name = document.createElement("div");
+    name.classList.add("recipe-card-name");
+    name.textContent = recipe.name;
+
+    const trash = document.createElement("button");
+    trash.classList.add("recipe-card-trash");
+    trash.setAttribute("aria-label", `Delete ${recipe.name}`);
+    trash.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="none">
+    <path d="M3.625 7.25002H6.04167M6.04167 7.25002H25.375M6.04167 7.25002L6.04167 24.1667C6.04167 24.8076 6.29628 25.4223 6.74949 25.8755C7.20271 26.3287 7.81739 26.5834 8.45833 26.5834H20.5417C21.1826 26.5834 21.7973 26.3287 22.2505 25.8755C22.7037 25.4223 22.9583 24.8076 22.9583 24.1667V7.25002M9.66667 7.25002V4.83335C9.66667 4.19241 9.92128 3.57773 10.3745 3.12451C10.8277 2.6713 11.4424 2.41669 12.0833 2.41669H16.9167C17.5576 2.41669 18.1723 2.6713 18.6255 3.12451C19.0787 3.57773 19.3333 4.19241 19.3333 4.83335V7.25002"
+        stroke="#1E1E1E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `;
+    trash.onclick = function(e) {
+        e.stopPropagation();
+        recipes = recipes.filter(r => r.name !== recipe.name);
+        updateRecipeDisplay();
+    };
+
+    card.appendChild(imageEl);
+    card.appendChild(name);
+    card.appendChild(trash);
+
+    document.getElementById("recipeitems").appendChild(card);
+}
+
+// recipe add form
+
+function openRecipeAddForm() {
+    document.getElementById("recipeaddform").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("recipenewname").value = "";
+    document.getElementById("recipenewpreptime").value = "";
+    document.getElementById("recipenewinstructions").value = "";
+    document.getElementById("recipeingredientslist").innerHTML = "";
+    const coverUpload = document.querySelector(".recipe-cover-upload");
+    const existingImg = coverUpload.querySelector("img");
+    if (existingImg) existingImg.remove();
+    addIngredientField();
+}
+
+function closeRecipeAddForm() {
+    document.getElementById("recipeaddform").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("recipeformnamewarning").style.display = "none";
+}
+
+function addIngredientField() {
+    const list = document.getElementById("recipeingredientslist");
+    const row = document.createElement("div");
+    row.classList.add("recipe-ingredient-row");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "e.g. 3 Tomatoes";
+
+    const trash = document.createElement("button");
+    trash.type = "button";
+    trash.classList.add("recipe-ingredient-trash");
+    trash.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="none">
+    <path d="M3.625 7.25002H6.04167M6.04167 7.25002H25.375M6.04167 7.25002L6.04167 24.1667C6.04167 24.8076 6.29628 25.4223 6.74949 25.8755C7.20271 26.3287 7.81739 26.5834 8.45833 26.5834H20.5417C21.1826 26.5834 21.7973 26.3287 22.2505 25.8755C22.7037 25.4223 22.9583 24.8076 22.9583 24.1667V7.25002M9.66667 7.25002V4.83335C9.66667 4.19241 9.92128 3.57773 10.3745 3.12451C10.8277 2.6713 11.4424 2.41669 12.0833 2.41669H16.9167C17.5576 2.41669 18.1723 2.6713 18.6255 3.12451C19.0787 3.57773 19.3333 4.19241 19.3333 4.83335V7.25002"
+        stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `;
+    trash.onclick = function() { row.remove(); };
+
+    row.appendChild(input);
+    row.appendChild(trash);
+    list.appendChild(row);
+}
+
+function previewRecipeCover(fileInput) {
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const upload = document.querySelector(".recipe-cover-upload");
+            const existing = upload.querySelector("img");
+            if (existing) existing.remove();
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            upload.appendChild(img);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+
+function recipeAddFormSubmit() {
+    const name = document.getElementById("recipenewname").value.trim();
+    const prepTime = document.getElementById("recipenewpreptime").value.trim();
+    const instructions = document.getElementById("recipenewinstructions").value.trim();
+
+    let nameflag = false;
+    recipes.forEach(r => {
+        if (r.name.toLowerCase() === name.toLowerCase()) {
+            document.getElementById("recipeformnamewarning").style.display = "block";
+            nameflag = true;
+        }
+    });
+    if (nameflag) return false;
+
+    const ingredients = [];
+    document.querySelectorAll("#recipeingredientslist .recipe-ingredient-row input").forEach(input => {
+        const val = input.value.trim();
+        if (val) ingredients.push(val);
+    });
+
+    const newRecipe = { name };
+    if (prepTime) newRecipe.prepTime = parseInt(prepTime);
+    if (ingredients.length > 0) newRecipe.ingredients = ingredients;
+    if (instructions) newRecipe.instructions = instructions;
+
+    const coverImg = document.querySelector(".recipe-cover-upload img");
+    if (coverImg) newRecipe.coverImage = coverImg.src;
+
+    recipes.push(newRecipe);
+    updateRecipeDisplay();
+    closeRecipeAddForm();
+    return false;
+}
+
+recipes.forEach(r => { pushRecipeCard(r) });
