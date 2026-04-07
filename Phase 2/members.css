@@ -134,7 +134,6 @@
     flex-shrink: 0;
 }
 
-/* Food request modal (reuses .edit-popup base) — black text to match household popup */
 #memberfoodrequestform .edit-label-main {
     color: var(--black);
 }
@@ -176,7 +175,6 @@
     margin-top: 22px;
 }
 
-/* Household edit popup — black labels, gray inputs */
 #householdeditform .edit-label-upper {
     color: var(--black);
 }
@@ -229,7 +227,6 @@
     letter-spacing: 0.06em;
 }
 
-/* Match visible text start with inputs: name field padding 18px, role select 16px */
 .household-edit-members-head .household-edit-head-name {
     padding-left: 18px;
     text-align: left;
@@ -311,7 +308,6 @@
     display: block;
 }
 
-/* Match .member-request-btn on member cards */
 .household-edit-add-member {
     width: 100%;
     display: flex;

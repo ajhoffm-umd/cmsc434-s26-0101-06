@@ -41,7 +41,7 @@
         <!--- everything should go inside the device -->
         <div class="device">
 
-            <!--- kitchen inventory tab here -->
+            <!--- kitchen inventory  -->
             <div id="inv" class="tabcontent">
                 <div class="invcontainer">
 
@@ -94,7 +94,7 @@
 
             </div>
 
-            <!--- live update grocery list here -->
+            <!---grocery list -->
             <div id="grocerytab" class="tabcontent">
                 <div class="invcontainer">
 
@@ -114,7 +114,7 @@
 
                     <div class="listarea">
                         <div id="groceryitems" class="pantrylist">
-                            <!-- grocery cards go here -->
+                            <!-- grocery cards -->
                         </div>
                     </div>
 
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            <!-- recipes tab here -->
+            <!-- recipes tab -->
             <div id="recipes" class="tabcontent">
                 <div class="invcontainer">
 
@@ -142,7 +142,7 @@
 
                     <div class="listarea">
                         <div id="recipeitems" class="pantrylist">
-                            <!-- recipe cards go here -->
+                            <!-- recipe cards -->
                         </div>
                     </div>
 
@@ -151,7 +151,7 @@
                 </div>
             </div>
 
-            <!-- members tab here -->
+            <!-- members tab -->
             <div id="members" class="tabcontent">
                 <div class="invcontainer members-container">
                     <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
@@ -168,7 +168,7 @@
                             <button type="button" class="members-edit-btn" onclick="openHouseholdEdit()">Edit</button>
                         </div>
                     </section>
-
+                    <!-- members header; include name, role, and request button -->
                     <section class="members-section" aria-labelledby="members-heading">
                         <h3 id="members-heading" class="members-section-title">Members</h3>
                         <div class="members-table-head">
@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- navbar here -->
+            <!-- navbar  -->
             <div class="navbar">
                 <div class="tabcontainer">
                     <button class="tablink" onclick="openTab('inv', this)">
@@ -221,7 +221,7 @@
                 </div>
             </div>
 
-            <!-- pantry list add form -->
+            <!-- pantry list add -->
             <div id="invaddform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Add New Item</h2>
@@ -247,6 +247,8 @@
                             <label class="edit-label-upper">QUANTITY</label>
                             <input type="number" id="invnewquantity" class="edit-sm-input" min="0" placeholder="Ex. 2">
                         </div>
+
+                        <!-- dropdown for units-->
                         <div class="edit-col">
                             <label class="edit-label-upper">UNITS</label>
                             <select id="invnewunits" class="edit-sm-select">
@@ -281,7 +283,7 @@
                 </form>
             </div>
 
-            <!-- pantry list edit form -->
+            <!-- pantry list edit (reuse of add) -->
             <div id="inveditform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Edit Item</h2>
@@ -341,7 +343,7 @@
                 </form>
             </div>
 
-            <!-- Grocery List Add Form -->
+            <!-- Grocery List Add Form (reuse from inventory)-->
             <div id="groceryaddform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Add New Item</h2>
@@ -397,7 +399,7 @@
                 </form>
             </div>
 
-            <!-- Grocery List Edit Form -->
+            <!-- Grocery List Edit -->
             <div id="groceryeditform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Edit Item</h2>
@@ -452,7 +454,7 @@
                 </form>
             </div>
 
-            <!-- Recipe Add Form -->
+            <!-- Recipe Add -->
             <div id="recipeaddform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Add New Recipe</h2>
@@ -559,7 +561,7 @@
                 <button type="button" class="edit-submit-btn household-edit-save-btn" onclick="saveHouseholdEdit()">Save changes</button>
             </div>
 
-            <!-- Request food (from Members tab) -->
+            <!-- Request food in members -->
             <div id="memberfoodrequestform" class="form-popup edit-popup">
                 <div class="edit-header">
                     <h2>Request a Food Item</h2>

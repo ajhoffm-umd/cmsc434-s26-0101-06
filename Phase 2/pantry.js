@@ -1,6 +1,3 @@
-
-
-
 // shared cover image preview helper
 function previewCover(fileInput, containerId) {
     if (fileInput.files && fileInput.files[0]) {
@@ -1340,9 +1337,20 @@ function pushRecipeCard(recipe) {
         imageEl.textContent = "🍽";
     }
 
+    const infoBlock = document.createElement("div");
+    infoBlock.classList.add("recipe-card-info");
+
     const name = document.createElement("div");
     name.classList.add("recipe-card-name");
     name.textContent = recipe.name;
+    infoBlock.appendChild(name);
+
+    if (recipe.prepTime) {
+        const time = document.createElement("div");
+        time.classList.add("recipe-card-time");
+        time.textContent = recipe.prepTime + " min";
+        infoBlock.appendChild(time);
+    }
 
     const trash = document.createElement("button");
     trash.classList.add("recipe-card-trash");
@@ -1360,7 +1368,7 @@ function pushRecipeCard(recipe) {
     };
 
     card.appendChild(imageEl);
-    card.appendChild(name);
+    card.appendChild(infoBlock);
     card.appendChild(trash);
 
     card.onclick = function() {
