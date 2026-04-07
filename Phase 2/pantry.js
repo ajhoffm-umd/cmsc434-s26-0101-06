@@ -27,8 +27,9 @@ function getCoverImageSrc(containerId) {
     return img ? img.src : null;
 }
 
-// sets default for the showing dropdown in pantry
 
+
+// locations in the inventory
 const defaultKitchenLocations = ["Pantry", "Fridge", "Freezer"];
 
 const selectElement = document.getElementById('listdropdown');
@@ -42,7 +43,7 @@ locationOptions += `<option value="${location}">${location}</option>`;
 let expSortAscending = true;
 
 selectElement.innerHTML = locationOptions;
-
+// default items in the fridge (hard coded so its not empty)
 let kitchenItems = [
   {
     name: "Almond Milk",
@@ -106,6 +107,7 @@ function getExpirationDisplay(expirationDate) {
         };
     }
 
+    // calculate expiration by taking todays date and subtracting from expiration date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -251,7 +253,7 @@ function pushElemListAdd(item) {
         deleteInvItem(card);
     };
 
-    // BUILD CARD
+
     card.appendChild(left);
     card.appendChild(right);
     card.appendChild(trash);
@@ -265,7 +267,7 @@ function pushElemListAdd(item) {
 
 kitchenItems.forEach(item => {pushElemListAdd(item)});
 
-// ITEM DELETE --------------------- //
+//  to delete an item
 
 function deleteInvItem(cardElem) {
     kitchenItems = kitchenItems.filter(item => item.name.toLowerCase() !== cardElem.id.toLowerCase());
@@ -273,8 +275,6 @@ function deleteInvItem(cardElem) {
 }
 
 
-
-// NEW ITEM FORM ------------------------------ //
 
 // add a list item using the form
 
@@ -460,6 +460,7 @@ function syncHouseholdEditDraftFromDom() {
     });
 }
 
+// figure out how to edit members 
 function renderHouseholdEditMemberRows() {
     const container = document.getElementById("householdeditmemberrows");
     if (!container || !householdEditDraft) return;
@@ -736,14 +737,14 @@ function openInvEditForm(elem) {
 
     document.getElementById("inveditdate").value = openItem.expirationDate || "";
 
-    // set location pills
+    // set location chips
     const loc = openItem.location;
     document.getElementById("inveditdrop").value = loc;
     document.querySelectorAll("#inveditpills .edit-pill").forEach(p => {
         p.classList.toggle("active-pill", p.dataset.loc === loc);
     });
 
-    // set up pill click handlers
+    // set up chip click handlers
     document.querySelectorAll("#inveditpills .edit-pill").forEach(p => {
         p.onclick = function() {
             document.getElementById("inveditdrop").value = this.dataset.loc;
@@ -799,6 +800,7 @@ function renderEditMembers(currentMembers) {
     });
 }
 
+// function so that if a pop up is open -> closes and cancels changes when switching tabs
 function closeListEditForm() {
   openItem = null;
   openElem = null;
@@ -849,9 +851,9 @@ function editListItemFormSubmit() {
 }
 
 
-// SORT BUTTONS --------------------- //
+// sorting functionalities
 
-function sortInvItemAlpha() {
+function sortInvItemAlpha() { //ignore for now - dont think we need to sort alphabetically
     kitchenItems.sort((a, b) => {
         var i = a.name.localeCompare(b.name);
         if (i == 0 && a.hasOwnProperty("expirationDate") && b.hasOwnProperty("expirationDate")) {
@@ -922,9 +924,9 @@ function setInventoryFilter(location, buttonElem) {
     buttonElem.classList.add("active-tab");
 }
 
-// ===================== GROCERY LIST ===================== //
+// grocery list functionalities
 
-let groceryItems = [
+let groceryItems = [ // some defaulted items
     { name: "Whole Milk", quantity: "1 LITER", members: ["Emily", "Sally"] },
     { name: "Cauliflower", quantity: "1 LITER", members: ["Emily"] },
     { name: "Eggs", quantity: "1 LITER" }
@@ -1174,7 +1176,7 @@ function groceryAddFormSubmit() {
 
 groceryItems.forEach(item => { pushGroceryCard(item) });
 
-// ===================== GROCERY EDIT FORM ===================== //
+// edit grocery pop up -> reuse inventory
 
 let openGroceryItem = null;
 let selectedGroceryEditMembers = [];
@@ -1295,7 +1297,7 @@ function groceryEditFormSubmit() {
 renderMembersPage();
 
 
-// ===================== RECIPES ===================== //
+// recipes
 
 let recipes = [
     { name: "Pork & Apples", prepTime: 30, ingredients: ["3 Pork Chops", "2 Apples", "1 Cup Broth"], instructions: "Season pork, sear, add sliced apples and broth. Simmer 25 min." },
