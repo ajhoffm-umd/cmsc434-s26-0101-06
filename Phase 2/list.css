@@ -63,7 +63,7 @@
 
 .grocery-card-requested {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--green);
     line-height: 1.2;
 }
@@ -135,4 +135,10 @@
     font-family: var(--font-family-main);
     white-space: nowrap;
     color: var(--black);
+    transition: background 0.2s, color 0.2s;
+}
+
+.grocery-to-inv-btn:hover {
+    background: var(--black);
+    color: var(--white);
 }

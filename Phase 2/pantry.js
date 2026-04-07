@@ -655,11 +655,9 @@ function openMemberFoodRequest(memberName) {
     if (!ctx || !input) return;
 
     ctx.textContent = "";
-    ctx.appendChild(document.createTextNode("Adding for "));
-    const strong = document.createElement("strong");
-    strong.textContent = memberName;
-    ctx.appendChild(strong);
-    ctx.appendChild(document.createTextNode(". This goes on the household grocery list."));
+    document.getElementById("memberrequestquantity").value = "";
+    document.getElementById("memberrequestunits").value = "";
+    ctx.textContent = "Adding for " + memberName + ". This will go on their grocery list.";
 
     input.value = "";
     if (warn) warn.style.display = "none";
@@ -680,7 +678,7 @@ function submitMemberFoodRequest() {
     const warn = document.getElementById("memberrequestwarning");
     if (!name) {
         document.getElementById("memberrequestitem").focus();
-        return;
+        return false;
     }
 
     let duplicate = false;
@@ -689,14 +687,21 @@ function submitMemberFoodRequest() {
     });
     if (duplicate) {
         warn.style.display = "block";
-        return;
+        return false;
     }
     warn.style.display = "none";
 
+    const qtyVal = document.getElementById("memberrequestquantity").value.trim();
+    const unitsVal = document.getElementById("memberrequestunits").value.trim();
+
     const newItem = { name, requestedBy: memberFoodRequestTarget };
+    if (qtyVal !== "") {
+        newItem.quantity = unitsVal ? `${qtyVal} ${unitsVal}` : qtyVal;
+    }
     groceryItems.push(newItem);
     updateGroceryDisplay();
     closeMemberFoodRequest();
+    return false;
 }
 let selectedEditMembers = [];
 

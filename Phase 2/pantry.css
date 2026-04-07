@@ -320,7 +320,7 @@ body {
     bottom: 20px;
     width: 78px;
     height: 78px;
-    border: none;
+    border: 3px solid var(--green);
     border-radius: 22px;
     background: var(--green);
     color: var(--white);
@@ -328,6 +328,12 @@ body {
     line-height: 1;
     cursor: pointer;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    transition: background 0.2s, color 0.2s;
+}
+
+.floatingadd:hover {
+    background: var(--white);
+    color: var(--green);
 }
 
 .floatingtrash {
@@ -564,7 +570,7 @@ body {
 .edit-submit-btn {
     width: 100%;
     padding: 16px;
-    border: none;
+    border: 2px solid var(--green);
     border-radius: 18px;
     background: var(--green);
     color: var(--white);
@@ -576,4 +582,10 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.edit-submit-btn:hover {
+    background: var(--white);
+    color: var(--green);
 }

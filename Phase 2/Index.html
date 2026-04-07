@@ -562,14 +562,39 @@
             <!-- Request food (from Members tab) -->
             <div id="memberfoodrequestform" class="form-popup edit-popup">
                 <div class="edit-header">
-                    <h2>Request a food item</h2>
+                    <h2>Request a Food Item</h2>
                     <button type="button" class="edit-close-btn" onclick="closeMemberFoodRequest()">&times;</button>
                 </div>
-                <p id="memberrequestcontext" class="member-request-context"></p>
-                <p id="memberrequestwarning" class="formwarning">That item is already on your grocery list.</p>
-                <label class="edit-label-main" for="memberrequestitem">What should we pick up?</label>
-                <input type="text" id="memberrequestitem" class="edit-sm-input" placeholder="e.g. Oat milk" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();submitMemberFoodRequest();}">
-                <button type="button" class="edit-submit-btn" onclick="submitMemberFoodRequest()">Add to grocery list</button>
+                <form onsubmit="return submitMemberFoodRequest()">
+                    <p id="memberrequestcontext" class="member-request-context"></p>
+
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <p id="memberrequestwarning" class="formwarning">That item is already on your grocery list.</p>
+                    <input type="text" id="memberrequestitem" class="edit-name-input" placeholder="e.g. Oat milk" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">QUANTITY</label>
+                            <input type="number" id="memberrequestquantity" class="edit-sm-input" min="0" placeholder="Ex. 2" step="any">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">UNITS</label>
+                            <select id="memberrequestunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Liters">Liters</option>
+                                <option value="Cups">Cups</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="edit-submit-btn">Add to Grocery List</button>
+                </form>
             </div>
 
             <div id="overlay" class="overlay"></div>
