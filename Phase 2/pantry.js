@@ -74,6 +74,36 @@ let kitchenItems = [
     location: "Pantry",
     quantity: "2 bags",
     members: ["Emily", "Sally"]
+  },
+  {
+    name: "Apples",
+    location: "Fridge",
+    quantity: "6",
+    members: ["Emily", "Sally"]
+  },
+  {
+    name: "Pork Chops",
+    location: "Fridge",
+    quantity: "3",
+    members: ["Emily"]
+  },
+  {
+    name: "Ham Steak",
+    location: "Fridge",
+    quantity: "1",
+    members: ["Sally"]
+  },
+  {
+    name: "Corn",
+    location: "Fridge",
+    quantity: "4 ears",
+    members: ["Mary"]
+  },
+  {
+    name: "Broth",
+    location: "Pantry",
+    quantity: "1 LITER",
+    members: ["Emily", "Sally"]
   }
 ];
 
@@ -97,6 +127,11 @@ function updateInvDisplay() {
             pushElemListAdd(item);
         }
     });
+
+    const recipesTab = document.getElementById("recipes");
+    if (recipesTab && recipesTab.style.display === "block") {
+        updateRecipeDisplay();
+    }
 }
 
 function getExpirationDisplay(expirationDate) {
@@ -1002,12 +1037,28 @@ function pushGroceryCard(item) {
         nameBlock.appendChild(req);
     }
 
+    const membersRow = document.createElement("div");
+    membersRow.classList.add("inventory-card-members");
+
+    const membersIcon = document.createElement("span");
+    membersIcon.classList.add("inventory-card-members-icon");
+    membersIcon.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+    <path d="M11.25 17.1875C8.325 17.1875 2.5 18.65 2.5 21.5625V23.75H20V21.5625C20 18.65 14.175 17.1875 11.25 17.1875ZM5.425 21.25C6.475 20.525 9.0125 19.6875 11.25 19.6875C13.4875 19.6875 16.025 20.525 17.075 21.25H5.425ZM11.25 15C13.6625 15 15.625 13.0375 15.625 10.625C15.625 8.2125 13.6625 6.25 11.25 6.25C8.8375 6.25 6.875 8.2125 6.875 10.625C6.875 13.0375 8.8375 15 11.25 15ZM11.25 8.75C12.2875 8.75 13.125 9.5875 13.125 10.625C13.125 11.6625 12.2875 12.5 11.25 12.5C10.2125 12.5 9.375 11.6625 9.375 10.625C9.375 9.5875 10.2125 8.75 11.25 8.75ZM20.05 17.2625C21.5 18.3125 22.5 19.7125 22.5 21.5625V23.75H27.5V21.5625C27.5 19.0375 23.125 17.6 20.05 17.2625ZM18.75 15C21.1625 15 23.125 13.0375 23.125 10.625C23.125 8.2125 21.1625 6.25 18.75 6.25C18.075 6.25 17.45 6.4125 16.875 6.6875C17.6625 7.8 18.125 9.1625 18.125 10.625C18.125 12.0875 17.6625 13.45 16.875 14.5625C17.45 14.8375 18.075 15 18.75 15Z" fill="black" fill-opacity="0.8"/>
+    </svg>
+    `;
+
+    const membersText = document.createElement("span");
+    membersText.classList.add("inventory-card-members-text");
     if (item.members && item.members.length > 0) {
-        const shared = document.createElement("div");
-        shared.classList.add("grocery-card-shared");
-        shared.textContent = "Shared with " + item.members.join(", ");
-        nameBlock.appendChild(shared);
+        membersText.textContent = item.members.join(", ");
+    } else {
+        membersText.textContent = "Shared";
     }
+
+    membersRow.appendChild(membersIcon);
+    membersRow.appendChild(membersText);
+    nameBlock.appendChild(membersRow);
 
     const qty = document.createElement("div");
     qty.classList.add("grocery-card-qty");
@@ -1299,10 +1350,97 @@ renderMembersPage();
 
 // recipes
 
+/**
+ * True if this ingredient line is covered by something in kitchenItems (name substring or key word overlap).
+ */
+function ingredientCoveredByInventory(ingredientLine, inventoryItems) {
+    const ing = ingredientLine.toLowerCase();
+    for (let i = 0; i < inventoryItems.length; i++) {
+        const name = inventoryItems[i].name.toLowerCase().trim();
+        if (name.length < 2) continue;
+        if (ing.includes(name)) return true;
+        const words = name.split(/\s+/).filter(w => w.length >= 3);
+        for (let j = 0; j < words.length; j++) {
+            if (ing.includes(words[j])) return true;
+        }
+    }
+    return false;
+}
+
+function getRecipeInventoryMatch(recipe) {
+    const ingredients = recipe.ingredients && recipe.ingredients.length > 0 ? recipe.ingredients : [];
+    if (ingredients.length === 0) {
+        return { matched: 0, total: 0, ratio: 0, allReady: false };
+    }
+    let matched = 0;
+    for (let k = 0; k < ingredients.length; k++) {
+        if (ingredientCoveredByInventory(ingredients[k], kitchenItems)) matched++;
+    }
+    const ratio = matched / ingredients.length;
+    return {
+        matched,
+        total: ingredients.length,
+        ratio,
+        allReady: matched === ingredients.length
+    };
+}
+
+function compareRecipesByPantryMatch(a, b) {
+    const ma = getRecipeInventoryMatch(a);
+    const mb = getRecipeInventoryMatch(b);
+    if (ma.allReady !== mb.allReady) return mb.allReady - ma.allReady;
+    if (ma.ratio !== mb.ratio) return mb.ratio - ma.ratio;
+    if (ma.matched !== mb.matched) return mb.matched - ma.matched;
+    return a.name.localeCompare(b.name);
+}
+
+function getRecipeAddedAt(r) {
+    return typeof r.addedAt === "number" ? r.addedAt : 0;
+}
+
+/** Newest first (higher addedAt first). Tie-breaker: name. */
+function compareRecipesByRecent(a, b) {
+    const diff = getRecipeAddedAt(b) - getRecipeAddedAt(a);
+    if (diff !== 0) return diff;
+    return a.name.localeCompare(b.name);
+}
+
+/** "match" | "recent" — toggled by the same style button as Inventory "Expiring Soon" */
+let recipeSortMode = "match";
+let recipeSortIconFlipped = false;
+
+function getRecipeSortComparator() {
+    if (recipeSortMode === "recent") {
+        return compareRecipesByRecent;
+    }
+    return compareRecipesByPantryMatch;
+}
+
+function toggleRecipeSort() {
+    recipeSortMode = recipeSortMode === "match" ? "recent" : "match";
+    recipeSortIconFlipped = !recipeSortIconFlipped;
+
+    const label = document.getElementById("recipesort-label");
+    if (label) {
+        label.textContent = recipeSortMode === "match" ? "Ingredient match" : "Recently added";
+    }
+
+    const icon = document.getElementById("recipesort-svg");
+    if (icon) {
+        if (recipeSortIconFlipped) {
+            icon.classList.add("flipped");
+        } else {
+            icon.classList.remove("flipped");
+        }
+    }
+
+    updateRecipeDisplay();
+}
+
 let recipes = [
-    { name: "Pork & Apples", prepTime: 30, ingredients: ["3 Pork Chops", "2 Apples", "1 Cup Broth"], instructions: "Season pork, sear, add sliced apples and broth. Simmer 25 min." },
-    { name: "Apple Pie", prepTime: 45, ingredients: ["5 Apples", "1 Cup Sugar", "2 Pie Crusts"], instructions: "Fill crust with sliced apples and sugar. Bake at 375F for 45 min." },
-    { name: "Ham & Corn", prepTime: 25, ingredients: ["1 Ham Steak", "3 Ears Corn", "Butter"], instructions: "Grill ham and corn. Serve with butter." }
+    { name: "Pork & Apples", prepTime: 30, ingredients: ["3 Pork Chops", "2 Apples", "1 Cup Broth"], instructions: "Season pork, sear, add sliced apples and broth. Simmer 25 min.", addedAt: 1 },
+    { name: "Apple Pie", prepTime: 45, ingredients: ["5 Apples", "1 Cup Sugar", "2 Pie Crusts"], instructions: "Fill crust with sliced apples and sugar. Bake at 375F for 45 min.", addedAt: 2 },
+    { name: "Ham & Corn", prepTime: 25, ingredients: ["1 Ham Steak", "3 Ears Corn", "Butter"], instructions: "Grill ham and corn. Serve with butter.", addedAt: 3 }
 ];
 
 function updateRecipeDisplay() {
@@ -1311,18 +1449,19 @@ function updateRecipeDisplay() {
     container.innerHTML = "";
 
     const filtered = recipes.filter(r => r.name.toLowerCase().includes(query));
+    const sorted = filtered.slice().sort(getRecipeSortComparator());
 
-    if (filtered.length === 0) {
+    if (sorted.length === 0) {
         const empty = document.createElement("div");
         empty.classList.add("empty-list-message");
         empty.textContent = "No Recipes Yet";
         container.appendChild(empty);
     } else {
-        filtered.forEach(r => pushRecipeCard(r));
+        sorted.forEach(r => pushRecipeCard(r, getRecipeInventoryMatch(r)));
     }
 }
 
-function pushRecipeCard(recipe) {
+function pushRecipeCard(recipe, matchInfo) {
     const card = document.createElement("div");
     card.classList.add("recipe-card");
     card.id = "recipe-" + recipe.name;
@@ -1352,6 +1491,26 @@ function pushRecipeCard(recipe) {
         time.classList.add("recipe-card-time");
         time.textContent = recipe.prepTime + " min";
         infoBlock.appendChild(time);
+    }
+
+    if (matchInfo && matchInfo.total > 0) {
+        const matchLine = document.createElement("div");
+        matchLine.classList.add("recipe-card-match");
+
+        const countSpan = document.createElement("span");
+        countSpan.classList.add("recipe-card-match-count");
+        countSpan.textContent =
+            matchInfo.matched + "/" + matchInfo.total + " ingredients in inventory";
+        matchLine.appendChild(countSpan);
+
+        if (matchInfo.allReady) {
+            const allSpan = document.createElement("span");
+            allSpan.classList.add("recipe-card-match-all");
+            allSpan.textContent = " · You have all ingredients";
+            matchLine.appendChild(allSpan);
+        }
+
+        infoBlock.appendChild(matchLine);
     }
 
     const trash = document.createElement("button");
@@ -1461,7 +1620,7 @@ function recipeAddFormSubmit() {
         if (val) ingredients.push(val);
     });
 
-    const newRecipe = { name };
+    const newRecipe = { name, addedAt: Date.now() };
     if (prepTime) newRecipe.prepTime = parseInt(prepTime);
     if (ingredients.length > 0) newRecipe.ingredients = ingredients;
     if (instructions) newRecipe.instructions = instructions;
@@ -1569,7 +1728,10 @@ function recipeEditFormSubmit() {
         if (val) ingredients.push(val);
     });
 
-    const updatedRecipe = { name };
+    const updatedRecipe = {
+        name,
+        addedAt: typeof openRecipe.addedAt === "number" ? openRecipe.addedAt : Date.now()
+    };
     if (prepTime) updatedRecipe.prepTime = parseInt(prepTime);
     if (ingredients.length > 0) updatedRecipe.ingredients = ingredients;
     if (instructions) updatedRecipe.instructions = instructions;
@@ -1583,7 +1745,7 @@ function recipeEditFormSubmit() {
     return false;
 }
 
-recipes.forEach(r => { pushRecipeCard(r) });
+updateRecipeDisplay();
 
 /**
  * Close every modal without persisting (used when switching bottom tabs).

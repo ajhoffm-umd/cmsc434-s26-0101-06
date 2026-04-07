@@ -60,8 +60,8 @@
 }
 
 .members-table-head .members-head-role {
-    text-align: right;
-    padding-right: 4px;
+    text-align: left;
+    min-width: 0;
 }
 
 .members-table-head .members-actions-head {
@@ -108,8 +108,8 @@
     font: var(--text-paragraph);
     font-size: 18px;
     color: var(--grey);
-    text-align: right;
-    padding-right: 4px;
+    text-align: left;
+    min-width: 0;
 }
 
 .member-request-btn {

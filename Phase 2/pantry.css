@@ -106,6 +106,7 @@ body {
     display: flex;
     align-items: center;
     position: relative;
+    margin-bottom: 22px;
 }
 
 .search svg {

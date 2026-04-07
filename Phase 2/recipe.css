@@ -56,6 +56,23 @@
     font-family: var(--font-family-main);
 }
 
+.recipe-card-match {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--grey);
+    font-family: var(--font-family-main);
+    line-height: 1.25;
+}
+
+.recipe-card-match-count {
+    color: var(--grey);
+}
+
+.recipe-card-match-all {
+    color: var(--green);
+    font-weight: 600;
+}
+
 .recipe-card-trash {
     border: none;
     background: transparent;
