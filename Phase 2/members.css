@@ -134,10 +134,6 @@
     flex-shrink: 0;
 }
 
-#memberfoodrequestform .edit-label-main {
-    color: var(--black);
-}
-
 #memberfoodrequestform .member-request-context {
     font: var(--text-paragraph);
     font-size: 18px;
@@ -163,12 +159,6 @@
     background: #eef0f1;
     font-size: 18px;
     outline: none;
-    color: var(--black);
-}
-
-#memberfoodrequestform .edit-sm-input::placeholder {
-    color: var(--black);
-    opacity: 0.45;
 }
 
 #memberfoodrequestform .edit-submit-btn {
@@ -180,8 +170,8 @@
 }
 
 #householdeditform .household-edit-section-label {
-    margin-top: 4px;
-    margin-bottom: 10px;
+    margin-top: 6px;
+    margin-bottom: 12px;
 }
 
 #householdeditform #householdeditname {
@@ -200,19 +190,19 @@
 }
 
 #householdeditform .edit-divider {
-    margin-top: 8px;
-    margin-bottom: 22px;
+    margin-top: 12px;
+    margin-bottom: 32px;
 }
 
 #householdeditform .household-edit-type-select {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     width: 100%;
     font-size: 20px;
     color: var(--black);
 }
 
 .household-edit-members-block {
-    margin-bottom: 20px;
+    margin-bottom: 26px;
 }
 
 .household-edit-members-head {
@@ -220,11 +210,14 @@
     grid-template-columns: 1fr minmax(140px, 180px) 44px;
     gap: 14px;
     align-items: center;
-    padding: 0 0 14px 0;
-    font: 700 18px / 1.2 var(--font-family-main);
+    padding: 0 0 16px 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
+    font-family: var(--font-family-main);
     color: var(--black);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .household-edit-members-head .household-edit-head-name {
@@ -241,7 +234,7 @@
 .household-edit-member-rows {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
 }
 
 .household-edit-member-row {
@@ -315,7 +308,7 @@
     justify-content: center;
     gap: 12px;
     padding: 14px 20px;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
     border: 2px solid var(--green);
     border-radius: 12px;
     background: rgba(13, 99, 27, 0.06);
