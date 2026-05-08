@@ -1,0 +1,188 @@
+/* ---- recipes ---- */
+
+.recipe-heading {
+    font: var(--text-h2);
+    color: var(--black);
+}
+
+#recipes .recipe-sort-toggle {
+    text-align: right;
+}
+
+.recipe-card {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 8px 14px;
+    min-height: 48px;
+    box-sizing: border-box;
+    width: 100%;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+}
+
+.recipe-card:hover {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .recipe-card {
+        transition: none;
+    }
+}
+
+.recipe-card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.recipe-card-name {
+    font: var(--text-h4);
+}
+
+.recipe-card-time {
+    font-size: 21px;
+    font-weight: 500;
+    color: var(--grey);
+    font-family: var(--font-family-main);
+}
+
+.recipe-card-match {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--grey);
+    font-family: var(--font-family-main);
+    line-height: 1.25;
+}
+
+.recipe-card-match-count {
+    color: var(--grey);
+}
+
+.recipe-card-match-all {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.recipe-card-trash {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+/* recipe add / edit form */
+
+.recipe-prep-input {
+    width: 140px !important;
+    margin-bottom: 28px;
+}
+
+.recipe-ingredients-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.recipe-ingredients-label {
+    margin-bottom: 0;
+}
+
+.recipe-add-ingredient-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #eef0f1;
+    font-size: 26px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.recipe-add-ingredient-btn:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+.recipe-ingredients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.recipe-ingredient-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recipe-ingredient-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 14px;
+    background: #eef0f1;
+    font-size: 19px;
+    font-family: var(--font-family-main);
+    color: var(--black);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.recipe-ingredient-row input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.recipe-ingredient-trash {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.recipe-instructions-input {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: #eef0f1;
+    font-size: 19px;
+    font-family: var(--font-family-main);
+    color: var(--black);
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-bottom: 28px;
+    min-height: 100px;
+}
+
+.recipe-instructions-input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* Recipe edit dialog: white inputs instead of grey */
+#recipeeditform .recipe-ingredient-row input,
+#recipeeditform .recipe-instructions-input,
+#recipeeditform .edit-sm-input {
+    background: var(--white);
+    border: 1.5px solid #e0e0e0;
+}

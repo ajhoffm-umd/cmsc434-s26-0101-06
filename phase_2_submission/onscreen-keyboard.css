@@ -1,0 +1,126 @@
+/* Demo on-screen keyboard — shown when a text field is focused */
+
+.osk-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #dfe8e0 0%, #c8d4cc 100%);
+  border-top: 2px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
+  z-index: 2500;
+  display: none;
+  flex-direction: column;
+  padding: 6px 8px 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  border-radius: 14px 14px 0 0;
+}
+
+.osk-panel.osk-visible {
+  display: flex;
+}
+
+.osk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 6px;
+  color: #1a1f1d;
+}
+
+.osk-title {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.osk-hide-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.55);
+  color: #0d631b;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.osk-hide-btn:hover {
+  background: #fff;
+}
+
+.osk-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.osk-row {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.osk-key {
+  min-width: 28px;
+  height: 36px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 6px;
+  background: #fdfefd;
+  color: #1a1f1d;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 0 #9aaa9f;
+  cursor: pointer;
+  flex: 1 1 auto;
+  max-width: 52px;
+  font-family: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.osk-key:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #9aaa9f;
+}
+
+.osk-key.osk-wide {
+  flex: 2.2 1 auto;
+  max-width: none;
+}
+
+.osk-key.osk-xwide {
+  flex: 6 1 auto;
+  max-width: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.osk-key.osk-utility {
+  background: #b8c4b8;
+  color: #0d1f12;
+  max-width: 56px;
+  flex: 1.15 1 auto;
+}
+
+.osk-num .osk-key {
+  font-size: 20px;
+}
+
+.osk-shift.osk-lit {
+  background: #7a9a7f;
+  color: #fff;
+}
+
+.device.osk-open {
+  padding-bottom: 0;
+}

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitchen Kompanion</title>
+<style>
+
+    /* root colors */
+    :root {
+        --bg-main: #e3f0fa;
+        --bg-nav: #FEFFFF;
+        --text-def: black;
+        --button-active: #2e7d32;
+        --screen-width: 640px;
+        --wire: none;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100%;
+        box-sizing: border-box;
+    }
+    body {
+        background-color: var(--bg-main);
+    }
+
+    /* device specifications from professor golub */
+    .device { 
+    margin: 0 auto;
+    box-sizing: border-box;
+    max-width: 640px;
+    width: 100%;
+    max-height: 960px;
+    height: 960px;
+    overflow: hidden;
+    background-color: var(--bg-main);
+    position: relative;
+    font-size: 32pt;
+    }
+
+    /* DEVICE AND ROOT SHOULD BE THE ONLY THINGs HERE */
+
+</style>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="pantry.css">
+<link rel="stylesheet" href="list.css">
+<link rel="stylesheet" href="recipe.css">
+<link rel="stylesheet" href="members.css">
+
+</head>
+    <body>
+        <!--- everything should go inside the device -->
+        <div class="device">
+
+            <!--- kitchen inventory  -->
+            <div id="inv" class="tabcontent">
+                <div class="invcontainer">
+
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
+
+                    <div class="search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18ZM6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11Z" fill="#70787D"/>
+                        </svg>
+                        <input id="invsearch" type="text" placeholder="Search your inventory..." oninput="updateInvDisplay()">
+                    </div>
+
+                    <div class="listheader topheader">
+                        <h2>Inventory</h2>
+                        <div class="headeractions">
+                            <button id="invsortexp" class="expiringsoon" onclick="sortInvItemExp()">
+                                <span class="expiringsoon-icon">
+                                    <svg id="expiringsoon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 4V18" stroke="#0D631B" stroke-width="2.5" stroke-linecap="round"/>
+                                        <path d="M7 13L12 18L17 13" stroke="#0D631B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            <span>Sort by Expiration</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sort">
+                        <button class="locationtab active-tab" onclick="setInventoryFilter('All', this)">All</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Fridge', this)">Fridge</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Freezer', this)">Freezer</button>
+                        <button class="locationtab" onclick="setInventoryFilter('Pantry', this)">Pantry</button>
+                    </div>
+
+                    <select onchange="updateInvDisplay()" id="listdropdown" style="display: none;">
+                        <option value="All">All</option>
+                        <option value="Fridge">Fridge</option>
+                        <option value="Freezer">Freezer</option>
+                        <option value="Pantry">Pantry</option>
+                    </select>
+
+                    <div class="listarea">
+                        <div id="invlist" class="pantrylist">
+                            <!-- inventory cards get added here -->
+                        </div>
+                    </div>
+
+                    <button id="invitemadd" class="itemadd floatingadd" onclick="openInvAddForm()">+</button>
+
+                </div>
+
+            </div>
+
+            <!---grocery list -->
+            <div id="grocerytab" class="tabcontent">
+                <div class="invcontainer">
+
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
+
+                    <div class="search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18ZM6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11Z" fill="#70787D"/>
+                        </svg>
+                        <input id="grocerysearch" type="text" placeholder="Search your grocery list..." oninput="updateGroceryDisplay()" autocomplete="off">
+                    </div>
+
+                    <div class="listheader topheader">
+                        <h2>Your Grocery List</h2>
+                        <button type="button" class="grocery-to-inv-btn" onclick="addCheckedToInventory()">Add selected item(s) to inventory</button>
+                    </div>
+
+                    <div class="listarea">
+                        <div id="groceryitems" class="pantrylist">
+                            <!-- grocery cards -->
+                        </div>
+                    </div>
+
+                    <button class="itemadd floatingadd" onclick="openGroceryAddForm()">+</button>
+
+                </div>
+            </div>
+
+            <!-- recipes tab -->
+            <div id="recipes" class="tabcontent">
+                <div class="invcontainer">
+
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
+
+                    <div class="search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M16.6 18L10.3 11.7C9.8 12.1 9.225 12.4167 8.575 12.65C7.925 12.8833 7.23333 13 6.5 13C4.68333 13 3.14583 12.3708 1.8875 11.1125C0.629167 9.85417 0 8.31667 0 6.5C0 4.68333 0.629167 3.14583 1.8875 1.8875C3.14583 0.629167 4.68333 0 6.5 0C8.31667 0 9.85417 0.629167 11.1125 1.8875C12.3708 3.14583 13 4.68333 13 6.5C13 7.23333 12.8833 7.925 12.65 8.575C12.4167 9.225 12.1 9.8 11.7 10.3L18 16.6L16.6 18ZM6.5 11C7.75 11 8.8125 10.5625 9.6875 9.6875C10.5625 8.8125 11 7.75 11 6.5C11 5.25 10.5625 4.1875 9.6875 3.3125C8.8125 2.4375 7.75 2 6.5 2C5.25 2 4.1875 2.4375 3.3125 3.3125C2.4375 4.1875 2 5.25 2 6.5C2 7.75 2.4375 8.8125 3.3125 9.6875C4.1875 10.5625 5.25 11 6.5 11Z" fill="#70787D"/>
+                        </svg>
+                        <input id="recipesearch" type="text" placeholder="Search your recipes..." oninput="updateRecipeDisplay()" autocomplete="off">
+                    </div>
+
+                    <div class="listheader topheader">
+                        <h2 class="recipe-heading">Your Recipes</h2>
+                        <div class="headeractions">
+                            <button type="button" id="recipesortbtn" class="expiringsoon recipe-sort-toggle" onclick="toggleRecipeSortDirection()">
+                                <span class="expiringsoon-icon">
+                                    <svg id="recipesort-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                                        <path d="M3 18H9V16H3V18ZM3 6V8H21V6H3ZM3 13H15V11H3V13Z" fill="#0D631B"/>
+                                    </svg>
+                                </span>
+                                <span id="recipesort-label">Sort by available ingredients</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="listarea">
+                        <div id="recipeitems" class="pantrylist">
+                            <!-- recipe cards -->
+                        </div>
+                    </div>
+
+                    <button class="itemadd floatingadd" onclick="openRecipeAddForm()">+</button>
+
+                </div>
+            </div>
+
+            <!-- members tab -->
+            <div id="members" class="tabcontent">
+                <div class="invcontainer members-container">
+                    <h1 class="brandtitle">Kitchen<span class="brandgreen">Kompanion</span></h1>
+
+                    <section class="members-household" aria-label="Household">
+                        <div class="members-household-top">
+                            <div>
+                                <h2 id="household-display-name" class="members-household-title"></h2>
+                                <p class="members-household-type">
+                                    <span class="label">Household Type:</span>
+                                    <span id="household-display-type"></span>
+                                </p>
+                            </div>
+                            <button type="button" class="members-edit-btn" onclick="openHouseholdEdit()">Edit</button>
+                        </div>
+                    </section>
+                    <!-- members header; include name, role, and request button -->
+                    <section class="members-section" aria-labelledby="members-heading">
+                        <h3 id="members-heading" class="members-section-title">Members</h3>
+                        <div class="members-table-head">
+                            <span aria-hidden="true"></span>
+                            <span class="members-head-name">Name</span>
+                            <span class="members-head-role">Role</span>
+                            <span class="members-actions-head">Request</span>
+                        </div>
+                        <div id="memberslist" class="members-list"></div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- navbar  -->
+            <div class="navbar">
+                <div class="tabcontainer">
+                    <button class="tablink" onclick="openTab('inv', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M8 6H32C33.1 6 34 6.9 34 8V32C34 33.1 33.1 34 32 34H8C6.9 34 6 33.1 6 32V8C6 6.9 6.9 6 8 6Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 18H34" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M20 6V34" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M14 12V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M26 12V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M14 23V27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M26 23V27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>Inventory</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('grocerytab', this)" id="defaultOpen">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="24" viewBox="0 0 34 24" fill="none">
+                            <path d="M10.2588 2.36719H30.7765M10.2588 11.8369H30.7765M10.2588 21.3066H30.7765M2.36743 2.36719H2.38321M2.36743 11.8369H2.38321M2.36743 21.3066H2.38321" stroke="currentColor" stroke-width="4.73485" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Grocery List</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('recipes', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="40" viewBox="0 0 36 40" fill="none">
+                            <path d="M6 4H30C31.1 4 32 4.9 32 6V34C32 35.1 31.1 36 30 36H6C4.9 36 4 35.1 4 34V6C4 4.9 4.9 4 6 4Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10 4V36" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M16 14H26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M16 20H26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>Recipes</span>
+                    </button>
+                    <button class="tablink" onclick="openTab('members', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
+                            <path d="M18.7501 28.6457C13.8751 28.6457 4.16675 31.0832 4.16675 35.9373V39.5832H33.3334V35.9373C33.3334 31.0832 23.6251 28.6457 18.7501 28.6457ZM9.04175 35.4165C10.7917 34.2082 15.0209 32.8123 18.7501 32.8123C22.4792 32.8123 26.7084 34.2082 28.4584 35.4165H9.04175ZM18.7501 24.9998C22.7709 24.9998 26.0417 21.729 26.0417 17.7082C26.0417 13.6873 22.7709 10.4165 18.7501 10.4165C14.7292 10.4165 11.4584 13.6873 11.4584 17.7082C11.4584 21.729 14.7292 24.9998 18.7501 24.9998ZM18.7501 14.5832C20.4792 14.5832 21.8751 15.979 21.8751 17.7082C21.8751 19.4373 20.4792 20.8332 18.7501 20.8332C17.0209 20.8332 15.6251 19.4373 15.6251 17.7082C15.6251 15.979 17.0209 14.5832 18.7501 14.5832ZM33.4168 28.7707C35.8334 30.5207 37.5001 32.854 37.5001 35.9373V39.5832H45.8334V35.9373C45.8334 31.729 38.5418 29.3332 33.4168 28.7707ZM31.2501 24.9998C35.2709 24.9998 38.5418 21.729 38.5418 17.7082C38.5418 13.6873 35.2709 10.4165 31.2501 10.4165C30.1251 10.4165 29.0834 10.6873 28.1251 11.1457C29.4376 12.9998 30.2084 15.2707 30.2084 17.7082C30.2084 20.1457 29.4376 22.4165 28.1251 24.2707C29.0834 24.729 30.1251 24.9998 31.2501 24.9998Z" fill="currentColor"/>
+                        </svg>
+                        <span>Members</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- pantry list add -->
+            <div id="invaddform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Add New Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeListAddForm()">&times;</button>
+                </div>
+                <form onsubmit="return addListItemFormSubmit()">
+                    <div class="recipe-cover-upload" id="invaddcover" onclick="document.getElementById('invaddcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="invaddcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'invaddcover')">
+                    </div>
+
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <p id="invformnamewarning" class="formwarning">An Item with this name already exists!</p>
+                    <input type="text" id="invnewname" class="edit-name-input" placeholder="What did you buy?" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Quantity</label>
+                            <input type="number" id="invnewquantity" class="edit-sm-input" min="0" placeholder="Ex. 2">
+                        </div>
+
+                        <!-- dropdown for units-->
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Units</label>
+                            <select id="invnewunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Cups">Cups</option>
+                                <option value="Liter">Liter</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Expires on</label>
+                            <input type="date" id="invnewdate" class="edit-sm-input">
+                        </div>
+                    </div>
+
+                    <label class="edit-label-upper">Storage location</label>
+                    <div class="edit-pills" id="invaddpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="invnewdrop" value="Fridge">
+
+                    <label class="edit-label-upper">Shared with</label>
+                    <div class="edit-members" id="invaddmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Add to Inventory</button>
+                </form>
+            </div>
+
+            <!-- pantry list edit (reuse of add) -->
+            <div id="inveditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeListEditForm()">&times;</button>
+                </div>
+                <form onsubmit="return editListItemFormSubmit()">
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <p id="invformnamewarningedit" class="formwarning">An Item with this name already exists!</p>
+                    <input type="text" id="inveditname" class="edit-name-input" placeholder="Enter item name..." required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Quantity</label>
+                            <input type="number" id="inveditquantity" class="edit-sm-input" min="0">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Units</label>
+                            <select id="inveditunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Cups">Cups</option>
+                                <option value="Liter">Liter</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Expires on</label>
+                            <input type="date" id="inveditdate" class="edit-sm-input">
+                        </div>
+                    </div>
+
+                    <label class="edit-label-upper">Storage location</label>
+                    <div class="edit-pills" id="inveditpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="inveditdrop" value="Fridge">
+
+                    <label class="edit-label-upper">Shared with</label>
+                    <div class="edit-members" id="inveditmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Save</button>
+                </form>
+            </div>
+
+            <!-- Grocery List Add Form (reuse from inventory)-->
+            <div id="groceryaddform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Add New Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeGroceryAddForm()">&times;</button>
+                </div>
+                <form onsubmit="return groceryAddFormSubmit()">
+                    <div class="recipe-cover-upload" id="groceryaddcover" onclick="document.getElementById('groceryaddcoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="groceryaddcoverfile" accept="image/*" style="display:none" onchange="previewCover(this, 'groceryaddcover')">
+                    </div>
+
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <p id="groceryformnamewarning" class="formwarning">This item is already on your list!</p>
+                    <input type="text" id="grocerynewname" class="edit-name-input" placeholder="What do you want to buy" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Quantity</label>
+                            <input type="number" id="grocerynewquantity" class="edit-sm-input" min="0" placeholder="Ex. 1.2" step="any">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Units</label>
+                            <select id="grocerynewunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Liters">Liters</option>
+                                <option value="Cups">Cups</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="edit-label-upper">Storage location</label>
+                    <div class="edit-pills" id="groceryaddpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="grocerynewlocation" value="Fridge">
+
+                    <label class="edit-label-upper">Shared with</label>
+                    <div class="edit-members" id="groceryaddmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Add to Grocery List</button>
+                </form>
+            </div>
+
+            <!-- grocery List Edit -->
+            <div id="groceryeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeGroceryEditForm()">&times;</button>
+                </div>
+                <form onsubmit="return groceryEditFormSubmit()">
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <input type="text" id="groceryeditname" class="edit-name-input" placeholder="Item name..." required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Quantity</label>
+                            <input type="number" id="groceryeditquantity" class="edit-sm-input" min="0" step="any">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Units</label>
+                            <select id="groceryeditunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Liters">Liters</option>
+                                <option value="Cups">Cups</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="edit-label-upper">Storage location</label>
+                    <div class="edit-pills" id="groceryeditpills">
+                        <button type="button" class="edit-pill active-pill" data-loc="Fridge">Fridge</button>
+                        <button type="button" class="edit-pill" data-loc="Freezer">Freezer</button>
+                        <button type="button" class="edit-pill" data-loc="Pantry">Pantry</button>
+                    </div>
+                    <input type="hidden" id="groceryeditlocation" value="Fridge">
+
+                    <label class="edit-label-upper">Shared with</label>
+                    <div class="edit-members" id="groceryeditmembers"></div>
+
+                    <button type="submit" class="edit-submit-btn">Save</button>
+                </form>
+            </div>
+
+            <!-- Recipe add -->
+            <div id="recipeaddform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Add New Recipe</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeRecipeAddForm()">&times;</button>
+                </div>
+                <form onsubmit="return recipeAddFormSubmit()">
+                    <div class="recipe-cover-upload" onclick="document.getElementById('recipecoverfile').click()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15.2C13.7673 15.2 15.2 13.7673 15.2 12C15.2 10.2327 13.7673 8.8 12 8.8C10.2327 8.8 8.8 10.2327 8.8 12C8.8 13.7673 10.2327 15.2 12 15.2Z" stroke="#555" stroke-width="1.5"/>
+                            <path d="M3 16.8V9.2C3 8.0799 3 7.5198 3.21799 7.092C3.40973 6.7157 3.71569 6.4097 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H6.8C7.1 6 7.3 5.9 7.5 5.7L8.7 4.3C8.9 4.1 9.1 4 9.4 4H14.6C14.9 4 15.1 4.1 15.3 4.3L16.5 5.7C16.7 5.9 16.9 6 17.2 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.092C21 7.5198 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#555" stroke-width="1.5"/>
+                        </svg>
+                        <span>Add Cover Image</span>
+                        <input type="file" id="recipecoverfile" accept="image/*" style="display:none" onchange="previewRecipeCover(this)">
+                    </div>
+
+                    <label class="edit-label-main">Recipe Name <span class="edit-required">*</span></label>
+                    <p id="recipeformnamewarning" class="formwarning">A recipe with this name already exists!</p>
+                    <input type="text" id="recipenewname" class="edit-name-input" placeholder="e.g. Cauliflower Stew" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <label class="edit-label-upper">Prep time (minutes)</label>
+                    <input type="number" id="recipenewpreptime" class="edit-sm-input recipe-prep-input" min="0" placeholder="30">
+
+                    <div class="recipe-ingredients-header">
+                        <button type="button" class="recipe-add-ingredient-btn" onclick="addIngredientField()">+</button>
+                        <label class="edit-label-upper recipe-ingredients-label">Ingredients</label>
+                    </div>
+                    <div id="recipeingredientslist" class="recipe-ingredients-list"></div>
+
+                    <label class="edit-label-upper">Instructions</label>
+                    <textarea id="recipenewinstructions" class="recipe-instructions-input" placeholder="eg. Flour" rows="4"></textarea>
+
+                    <button type="submit" class="edit-submit-btn">Add Recipe</button>
+                </form>
+            </div>
+
+            <!-- Recipe edit same as add -->
+            <div id="recipeeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit Recipe</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeRecipeEditForm()">&times;</button>
+                </div>
+                <form onsubmit="return recipeEditFormSubmit()">
+                    <label class="edit-label-main">Recipe Name <span class="edit-required">*</span></label>
+                    <input type="text" id="recipeeditname" class="edit-name-input" placeholder="e.g. Cauliflower Stew" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <label class="edit-label-upper">Prep time (minutes)</label>
+                    <input type="number" id="recipeeditpreptime" class="edit-sm-input recipe-prep-input" min="0" placeholder="30">
+
+                    <div class="recipe-ingredients-header">
+                        <button type="button" class="recipe-add-ingredient-btn" onclick="addEditIngredientField()">+</button>
+                        <label class="edit-label-upper recipe-ingredients-label">Ingredients</label>
+                    </div>
+                    <div id="recipeeditingredientslist" class="recipe-ingredients-list"></div>
+
+                    <label class="edit-label-upper">Instructions</label>
+                    <textarea id="recipeeditinstructions" class="recipe-instructions-input" placeholder="eg. Flour" rows="4"></textarea>
+
+                    <button type="submit" class="edit-submit-btn">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Edit household (from Members tab) -->
+            <div id="householdeditform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Edit household</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeHouseholdEdit()">&times;</button>
+                </div>
+
+                <label class="edit-label-upper household-edit-section-label" for="householdeditname">Household name</label>
+                <input type="text" id="householdeditname" class="edit-name-input" placeholder="e.g. The Smith's House" autocomplete="off">
+                <div class="edit-divider"></div>
+
+                <label class="edit-label-upper household-edit-section-label" for="householdedittype">Household type</label>
+                <select id="householdedittype" class="edit-sm-select household-edit-type-select">
+                    <option value="Roommates">Roommates</option>
+                    <option value="Family">Family</option>
+                    <option value="Solo">Solo</option>
+                </select>
+
+                <div class="household-edit-members-block">
+                    <div class="household-edit-members-head">
+                        <span class="household-edit-head-name">Name</span>
+                        <span class="household-edit-head-role">Role</span>
+                        <span class="household-edit-members-head-spacer" aria-hidden="true"></span>
+                    </div>
+                    <div id="householdeditmemberrows" class="household-edit-member-rows"></div>
+                </div>
+
+                <button type="button" class="household-edit-add-member" onclick="addHouseholdEditMemberRow()">
+                    <span class="household-edit-add-member-icon" aria-hidden="true">+</span>
+                    Add member
+                </button>
+                <button type="button" class="edit-submit-btn household-edit-save-btn" onclick="saveHouseholdEdit()">Save changes</button>
+            </div>
+
+            <!-- Request food in members -->
+            <div id="memberfoodrequestform" class="form-popup edit-popup">
+                <div class="edit-header">
+                    <h2>Request a Food Item</h2>
+                    <button type="button" class="edit-close-btn" onclick="closeMemberFoodRequest()">&times;</button>
+                </div>
+                <form onsubmit="return submitMemberFoodRequest()">
+                    <p id="memberrequestcontext" class="member-request-context"></p>
+
+                    <label class="edit-label-main">Item Name <span class="edit-required">*</span></label>
+                    <p id="memberrequestwarning" class="formwarning">That item is already on your grocery list.</p>
+                    <input type="text" id="memberrequestitem" class="edit-name-input" placeholder="e.g. Oat milk" required autocomplete="off">
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row-3">
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Quantity</label>
+                            <input type="number" id="memberrequestquantity" class="edit-sm-input" min="0" placeholder="Ex. 2" step="any">
+                        </div>
+                        <div class="edit-col">
+                            <label class="edit-label-upper">Units</label>
+                            <select id="memberrequestunits" class="edit-sm-select">
+                                <option value="">--</option>
+                                <option value="Liters">Liters</option>
+                                <option value="Cups">Cups</option>
+                                <option value="ML">ML</option>
+                                <option value="Grams">Grams</option>
+                                <option value="Oz">Oz</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Items">Items</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="edit-submit-btn">Add to Grocery List</button>
+                </form>
+            </div>
+
+            <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
+                <span id="toastmsg" class="toast-msg"></span>
+            </div>
+
+            <div id="overlay" class="overlay"></div>
+
+        </div>
+
+        <script>
+
+            // rips colors out of root styling, add more as needed
+            const rootStyles = getComputedStyle(document.documentElement);
+            const bg_main = rootStyles.getPropertyValue('--bg-main');
+            const text_def = rootStyles.getPropertyValue('--text-def');
+            const bg_nav = rootStyles.getPropertyValue('--bg-nav');
+            const button_active = rootStyles.getPropertyValue('--button-active');
+
+            /* THE ONLY CODE IN HERE SHOULD BE NAVBAR!! */
+            /* use a different file for anything else please */
+
+            function openTab(tabName, elmnt) {
+                if (typeof closeAllPopupsDiscardUnsaved === "function") {
+                    closeAllPopupsDiscardUnsaved();
+                }
+
+                var i, tabcontent, tablinks;
+
+                // get all tabcontents
+                tabcontent = document.getElementsByClassName("tabcontent");
+
+                // set all to hidden
+                for(i=0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // get all tab buttons
+                tablinks = document.getElementsByClassName("tablink");
+
+                // set all to basic background color
+                for(i=0; i < tablinks.length; i++) {
+                    tablinks[i].classList.remove("nav-active");
+                }
+
+                // set selected tab content to visible and tab button to selected
+                document.getElementById(tabName).style.display = "block";
+                elmnt.classList.add("nav-active");
+
+                if (tabName === "recipes" && typeof updateRecipeDisplay === "function") {
+                    updateRecipeDisplay();
+                }
+
+            }
+
+            // default open tab
+
+            document.getElementById("defaultOpen").click();
+
+
+        </script>
+
+        
+        <script src="pantry.js"></script>
+
+    </body>
+</html>
